@@ -34,290 +34,198 @@
 
 struct npu_smi_type_map *g_type_map_list = NULL;
 
-static struct npu_smi_type_map g_type_watch_map_list[] = {
-    {"p", POWER_TYPE},
-    {"t", TEMP_TYPE},
-    {"a", AI_CORE_TYPE},
-    {"i", AI_CPU_TYPE},
-    {"c", CTRL_CPU_TYPE},
-    {"m", MEMORY_TYPE},
-    {"b", MEMORY_BANDWIDTH_TYPE},
-    {"n", NPU_UTILIZATION_TYPE},
-    {"u", AI_CUBE_TYPE},
-    {NULL}
-};
+static struct npu_smi_type_map g_type_watch_map_list[] = {{"p", POWER_TYPE},
+                                                          {"t", TEMP_TYPE},
+                                                          {"a", AI_CORE_TYPE},
+                                                          {"i", AI_CPU_TYPE},
+                                                          {"c", CTRL_CPU_TYPE},
+                                                          {"m", MEMORY_TYPE},
+                                                          {"b", MEMORY_BANDWIDTH_TYPE},
+                                                          {"n", NPU_UTILIZATION_TYPE},
+                                                          {"u", AI_CUBE_TYPE},
+                                                          {NULL}};
 struct npu_smi_type_map g_type_info_map_list[] = {
-    {"flash",               FLASH,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
-    {"usages",              USAGES,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
-    {"ecc-enable",          ECC_ENABLE,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
-    {"p2p-enable",          P2P_ENABLE_FLAG,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_310 | CMD_SPT_310B},
-    {"ecc",                 ECC,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
-    {"common",              COMMON,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
-    {"license",             CUSTOMIZED_INFO,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_SPT_310_CARD, CMD_SPT_310_CARD},
-    {"i2c_check",           IIC_CHECK,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_SPT_310_CARD, CMD_SPT_310_CARD},
-    {"ssh-enable",          SSH_ENABLE,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_SPT_310_CARD,
-        CMD_SPT_STATION_HILEN | CMD_SPT_310_CARD | CMD_SPT_310P_CARD},
-    {"err-count",           ERR_COUNT,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0, CMD_SPT_310_CARD},
-    {"pcie-err",            ERR_COUNT,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0, CMD_SPT_310P_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"mcu-monitor",         MCU_MONITOR,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0, CMD_SPT_STATION_HILEN},
-    {"boot-area",           BOOT_AREA,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0, CMD_SPT_STATION_HILEN},
-    {"board",               BOARD,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
-    {"health",              HEALTH,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
-    {"volt",                VOLT,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
-    {"temp",                TEMP,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
-    {"power",               POWER,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
-    {"memory",              MEMORY,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
-    {"product",             PRODUCT_TYPE,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_310 | CMD_SPT_310P | CMD_SPT_310B},
-    {"mac-addr",            MAC_ADDR,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_DOCKER, 0, CMD_SPT_310B},
-    {"ip",                  IP,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0, CMD_SPT_STATION_HILEN | CMD_SPT_310_CARD},
-    {"device-share",        DEVICE_SHARE,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0,
-        CMD_SPT_310_SOC | CMD_SPT_STATION | CMD_SPT_310B | CMD_SPT_310P | CMD_SPT_910B | CMD_SPT_910_93},
-    {"device-share-cfg-recover", DEVICE_SHARE_CFG_RECOVER,
-        CMD_HW_SPT_COMMON,   CMD_ENV_SPT_DOCKER, 0,
-        CMD_SPT_310P | CMD_SPT_910B | CMD_SPT_910_93},
-    {"nve-level",           NVE_LEVEL,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0, CMD_SPT_310_SOC | CMD_SPT_310B},
-    {"aicpu-config",        AICPU_CONF,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0, CMD_SPT_310_SOC},
-    {"sensors",             SENSORS,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0,
-        CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"sys-time",            SYS_TIME,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0,
-        CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"customized-info",     CUSTOMIZED_INFO,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0, CMD_SPT_310P},
-    {"info-vnpu",           VNPU_INFO,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0,
-        CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B},
-    {"vnpu-mode",           VNPU_MODE,
-        CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B},
-    {"pkcs-enable",         PKCS_ENABLE,
-        CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310P_CARD},
-    {"vnpu-svm",            VNPU_SVM_INFO,
-        CMD_HW_SPT_CARD_CHIP,   0, 0, CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER},
-    {"key-manage",          KEY_MANAGE,
-        CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0, CMD_SPT_MODEL | CMD_SPT_STATION | CMD_SPT_HILENS | CMD_SPT_SERVER | \
-        CMD_SPT_310_CARD | CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"first-power-on-date", FIRST_POWER_ON_DATE,
-        CMD_HW_SPT_CARD,        CMD_ENV_SPT_NON_ROOT, 0, CMD_SPT_310P | CMD_SPT_910B_CARD | CMD_SPT_910_93_CARD},
-    {"tls-csr-get",         TLS_CSR_GET,
-        CMD_HW_SPT_CHIP,        0, 0, CMD_SPT_910B | CMD_SPT_310P_CARD | CMD_SPT_910_93 | CMD_SPT_950},
-    {"tls-cert",            TLS_CERT,
-        CMD_HW_SPT_CHIP,        CMD_ENV_SPT_ALL, 0, CMD_SPT_910B | CMD_SPT_310P_CARD | CMD_SPT_910_93 | CMD_SPT_950},
-    {"tls-cert-period",     TLS_CERT_PERIOD,
-        CMD_HW_SPT_CHIP,        CMD_ENV_SPT_ALL, 0, CMD_SPT_910B | CMD_SPT_310P_CARD | CMD_SPT_910_93 | CMD_SPT_950},
-    {"rootkey",     ROOTKEY,
-        CMD_HW_SPT_CHIP,        CMD_ENV_SPT_ALL, 0, CMD_SPT_910B | CMD_SPT_310P_CARD},
-    {"proc-mem",            PROC_MEM,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0, CMD_SPT_EP | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950_CARD | \
-        CMD_SPT_950_SERVER},
-    {"cpu-num-cfg",         CPU_NUM_CFG,
-        CMD_HW_SPT_CHIP,        CMD_ENV_SPT_ALL, 0, CMD_SPT_310P | CMD_SPT_310B},
-    {"phyid-remap",         PHYID_REMAP,
-        CMD_HW_SPT_CHIP,        CMD_ENV_SPT_ALL, 0, CMD_SPT_ALL},
-    {"vnpu-cfg-recover",    VNPU_CFG_RECOVER,
-        CMD_HW_SPT_COMMON,  CMD_ENV_SPT_VM, 0, CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B},
-    {"template-info",         TEMPLATE_INFO,
-        CMD_HW_SPT_COMMON,  CMD_ENV_SPT_VM, 0, CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B},
-    {"pwm-mode",            PWM_MODE,
-        CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310B_SOC_DK},
-    {"pwm-duty-ratio",      PWM_DUTY_RATIO,
-        CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310B_SOC_DK},
-    {"p2p-mem-cfg",         P2P_MEM_CFG,
-        CMD_HW_SPT_CARD_CHIP,    CMD_ENV_SPT_ALL, 0, CMD_SPT_310P_CARD},
-    {"work-mode",           WORK_MODE,
-        CMD_HW_SPT_CARD,    CMD_ENV_SPT_ALL, 0, CMD_SPT_SERVER},
-    {"boot-select",         BOOT_SEL,
-        CMD_HW_SPT_CARD_CHIP,    CMD_ENV_SPT_ALL, 0, CMD_SPT_310B_SOC_STATION},
-    {"topo",                TOPO,
-        CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER | CMD_ENV_SPT_NON_ROOT, 0,
-        CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"flash", FLASH, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
+    {"usages", USAGES, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
+    {"ecc-enable", ECC_ENABLE, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
+    {"p2p-enable", P2P_ENABLE_FLAG, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_310 | CMD_SPT_310B},
+    {"ecc", ECC, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
+    {"common", COMMON, CMD_HW_SPT_CARD, CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
+    {"license", CUSTOMIZED_INFO, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_SPT_310_CARD, CMD_SPT_310_CARD},
+    {"i2c_check", IIC_CHECK, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_SPT_310_CARD, CMD_SPT_310_CARD},
+    {"ssh-enable", SSH_ENABLE, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_SPT_310_CARD,
+     CMD_SPT_STATION_HILEN | CMD_SPT_310_CARD | CMD_SPT_310P_CARD},
+    {"err-count", ERR_COUNT, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_310_CARD},
+    {"pcie-err", ERR_COUNT, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"mcu-monitor", MCU_MONITOR, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_STATION_HILEN},
+    {"boot-area", BOOT_AREA, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_STATION_HILEN},
+    {"board", BOARD, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
+    {"health", HEALTH, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
+    {"volt", VOLT, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
+    {"temp", TEMP, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
+    {"power", POWER, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
+    {"memory", MEMORY, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL, CMD_SPT_ALL},
+    {"product", PRODUCT_TYPE, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_WIN_SPT_ALL,
+     CMD_SPT_310 | CMD_SPT_310P | CMD_SPT_310B},
+    {"mac-addr", MAC_ADDR, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_DOCKER, 0, CMD_SPT_310B},
+    {"ip", IP, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_STATION_HILEN | CMD_SPT_310_CARD},
+    {"device-share", DEVICE_SHARE, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0,
+     CMD_SPT_310_SOC | CMD_SPT_STATION | CMD_SPT_310B | CMD_SPT_310P | CMD_SPT_910B | CMD_SPT_910_93},
+    {"device-share-cfg-recover", DEVICE_SHARE_CFG_RECOVER, CMD_HW_SPT_COMMON, CMD_ENV_SPT_DOCKER, 0,
+     CMD_SPT_310P | CMD_SPT_910B | CMD_SPT_910_93},
+    {"nve-level", NVE_LEVEL, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_310_SOC | CMD_SPT_310B},
+    {"aicpu-config", AICPU_CONF, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_310_SOC},
+    {"sensors", SENSORS, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"sys-time", SYS_TIME, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"customized-info", CUSTOMIZED_INFO, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_310P},
+    {"info-vnpu", VNPU_INFO, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B},
+    {"vnpu-mode", VNPU_MODE, CMD_HW_SPT_COMMON, 0, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B},
+    {"pkcs-enable", PKCS_ENABLE, CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310P_CARD},
+    {"vnpu-svm", VNPU_SVM_INFO, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER},
+    {"key-manage", KEY_MANAGE, CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0,
+     CMD_SPT_MODEL | CMD_SPT_STATION | CMD_SPT_HILENS | CMD_SPT_SERVER | CMD_SPT_310_CARD | CMD_SPT_310P_CARD |
+         CMD_SPT_910_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"first-power-on-date", FIRST_POWER_ON_DATE, CMD_HW_SPT_CARD, CMD_ENV_SPT_NON_ROOT, 0,
+     CMD_SPT_310P | CMD_SPT_910B_CARD | CMD_SPT_910_93_CARD},
+    {"tls-csr-get", TLS_CSR_GET, CMD_HW_SPT_CHIP, 0, 0,
+     CMD_SPT_910B | CMD_SPT_310P_CARD | CMD_SPT_910_93 | CMD_SPT_950},
+    {"tls-cert", TLS_CERT, CMD_HW_SPT_CHIP, CMD_ENV_SPT_ALL, 0,
+     CMD_SPT_910B | CMD_SPT_310P_CARD | CMD_SPT_910_93 | CMD_SPT_950},
+    {"tls-cert-period", TLS_CERT_PERIOD, CMD_HW_SPT_CHIP, CMD_ENV_SPT_ALL, 0,
+     CMD_SPT_910B | CMD_SPT_310P_CARD | CMD_SPT_910_93 | CMD_SPT_950},
+    {"rootkey", ROOTKEY, CMD_HW_SPT_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_910B | CMD_SPT_310P_CARD},
+    {"proc-mem", PROC_MEM, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0,
+     CMD_SPT_EP | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950_CARD | CMD_SPT_950_SERVER},
+    {"cpu-num-cfg", CPU_NUM_CFG, CMD_HW_SPT_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_310P | CMD_SPT_310B},
+    {"phyid-remap", PHYID_REMAP, CMD_HW_SPT_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_ALL},
+    {"vnpu-cfg-recover", VNPU_CFG_RECOVER, CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B},
+    {"template-info", TEMPLATE_INFO, CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B},
+    {"pwm-mode", PWM_MODE, CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310B_SOC_DK},
+    {"pwm-duty-ratio", PWM_DUTY_RATIO, CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310B_SOC_DK},
+    {"p2p-mem-cfg", P2P_MEM_CFG, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_310P_CARD},
+    {"work-mode", WORK_MODE, CMD_HW_SPT_CARD, CMD_ENV_SPT_ALL, 0, CMD_SPT_SERVER},
+    {"boot-select", BOOT_SEL, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_310B_SOC_STATION},
+    {"topo", TOPO, CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER | CMD_ENV_SPT_NON_ROOT, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
 #ifdef ORIENT_CH
-    {"xlink",         HCCS,
-        CMD_HW_SPT_CHIP,    CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER,
-        0, CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_310P},
+    {"xlink", HCCS, CMD_HW_SPT_CHIP, CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0,
+     CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_310P},
 #else
-    {"hccs",         HCCS,
-        CMD_HW_SPT_CHIP,    CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER,
-        0, CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_310P},
+    {"hccs", HCCS, CMD_HW_SPT_CHIP, CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0,
+     CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_310P},
 #endif
-    {"spod-info",         SPOD_INFO,
-        CMD_HW_SPT_CHIP,    CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910_93 | \
-        CMD_SPT_950_SERVER},
-    {"sio-info",         SIO_INFO,
-        CMD_HW_SPT_CHIP,    CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910_93 | \
-        CMD_SPT_950},
+    {"spod-info", SPOD_INFO, CMD_HW_SPT_CHIP, CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0,
+     CMD_SPT_910_93 | CMD_SPT_950_SERVER},
+    {"sio-info", SIO_INFO, CMD_HW_SPT_CHIP, CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0,
+     CMD_SPT_910_93 | CMD_SPT_950},
 #ifdef ORIENT_CH
-    {"xlink-bw",    HCCS_BANDWIDTH_INFO,
-        CMD_HW_SPT_COMMON, CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER,
-        0, CMD_SPT_910B | CMD_SPT_910_93},
+    {"xlink-bw", HCCS_BANDWIDTH_INFO, CMD_HW_SPT_COMMON, CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0,
+     CMD_SPT_910B | CMD_SPT_910_93},
 #else
-    {"hccs-bw",    HCCS_BANDWIDTH_INFO,
-        CMD_HW_SPT_COMMON, CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER,
-        0, CMD_SPT_910B | CMD_SPT_910_93},
+    {"hccs-bw", HCCS_BANDWIDTH_INFO, CMD_HW_SPT_COMMON, CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0,
+     CMD_SPT_910B | CMD_SPT_910_93},
 #endif
-    {"cpu-freq-up",      CPU_FREQ_UP,
-        CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_310P_CARD},
+    {"cpu-freq-up", CPU_FREQ_UP, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_310P_CARD},
 #ifdef ORIENT_CH
-    {"xlink-credit",         HCCS_AVAIL_CREDIT,
-        CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_910_93},
+    {"xlink-credit", HCCS_AVAIL_CREDIT, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_910_93},
 #else
-    {"hccs-credit",         HCCS_AVAIL_CREDIT,
-        CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_910_93},
+    {"hccs-credit", HCCS_AVAIL_CREDIT, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_910_93},
 #endif
-    {"sys-log-info",  SYS_LOG_INFO,
-        CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0, CMD_SPT_310P_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"custom-op", CUSTOM_OP,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0, CMD_SPT_910_93},
-    {"custom-op-cfg-recover", CUSTOM_OP_CFG_RECOVER,
-        CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_910_93},
-    {"custom-op-secverify-enable", CUSTOM_OP_SECVERIFY_ENABLE,
-        CMD_HW_SPT_CARD, CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0,
-        CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"custom-op-secverify-mode", CUSTOM_OP_SECVERIFY_MODE,
-        CMD_HW_SPT_CARD, CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0,
-        CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"op-timeout", OP_TIMEOUT,
-        CMD_HW_SPT_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_910B | CMD_SPT_910_93},
+    {"sys-log-info", SYS_LOG_INFO, CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"custom-op", CUSTOM_OP, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_910_93},
+    {"custom-op-cfg-recover", CUSTOM_OP_CFG_RECOVER, CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_910_93},
+    {"custom-op-secverify-enable", CUSTOM_OP_SECVERIFY_ENABLE, CMD_HW_SPT_CARD,
+     CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"custom-op-secverify-mode", CUSTOM_OP_SECVERIFY_MODE, CMD_HW_SPT_CARD,
+     CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"op-timeout", OP_TIMEOUT, CMD_HW_SPT_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_910B | CMD_SPT_910_93},
     {"current-fault-event", CURRENT_FAULT_EVENT, CMD_HW_SPT_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_950},
     {"custom-op-secverify-cert", CUSTOM_OP_SECVERIFY_CERT, CMD_HW_SPT_CARD,
-        CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910B | CMD_SPT_910_93},
+     CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910B | CMD_SPT_910_93},
     {"multi-die-policy", MULTI_DIE_POLICY, CMD_HW_SPT_COMMON, CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910_93},
-    {"multi-die-policy-cfg-recover", MULTI_DIE_POLICY_CFG_RECOVER,
-        CMD_HW_SPT_COMMON, CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910_93},
-    { NULL }
-};
+    {"multi-die-policy-cfg-recover", MULTI_DIE_POLICY_CFG_RECOVER, CMD_HW_SPT_COMMON, CMD_ENV_SPT_DOCKER, 0,
+     CMD_SPT_910_93},
+    {NULL}};
 
 struct npu_smi_type_map g_type_set_map_list[] = {
-    {"ecc-enable",      ECC_ENABLE,
-        CMD_HW_SPT_CARD_CHIP, 0, CMD_WIN_SPT_ALL, CMD_SPT_310 | CMD_SPT_310P | CMD_SPT_310B},
-    {"collect-log",     COLLECT_LOG,
-        CMD_HW_SPT_CARD_CHIP, 0, CMD_SPT_310_CARD, CMD_SPT_MCU},
-    {"license",         CUSTOMIZED_INFO,
-        CMD_HW_SPT_CARD_CHIP, 0, CMD_SPT_310_CARD, CMD_SPT_310_CARD},
-    {"reset",           RESET,
-        CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ROOT,
-        CMD_SPT_310_CARD, CMD_SPT_CARD | CMD_SPT_ALL_SERVER | CMD_SPT_MODEL | CMD_SPT_910B_CARD | \
-        CMD_SPT_910_93_CARD | CMD_SPT_950_CARD | CMD_SPT_950_SERVER},
-    {"ssh-enable",      SSH_ENABLE,
-        CMD_HW_SPT_CARD_CHIP, 0, CMD_SPT_310_CARD, CMD_SPT_STATION_HILEN | CMD_SPT_310_CARD | CMD_SPT_310P_CARD},
-    {"errcount-clear",  ERR_COUNT_CLEAR,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310_CARD},
-    {"clear-pcie-err",  ERR_COUNT_CLEAR,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310P_CARD},
-    {"mcu-monitor",     MCU_MONITOR,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_STATION_HILEN},
-    {"boot-area",       BOOT_AREA,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_STATION_HILEN},
-    {"disk-power",      DISK_POWER,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_STATION_HILEN | CMD_SPT_310B},
-    {"ip",              IP,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_STATION_HILEN | CMD_SPT_310_CARD},
-    {"device-share",    DEVICE_SHARE,
-        CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_DOCKER, 0,
-        CMD_SPT_310_SOC | CMD_SPT_STATION_HILEN | CMD_SPT_310B | CMD_SPT_310P | CMD_SPT_910B | CMD_SPT_910_93},
-    {"device-share-cfg-recover", DEVICE_SHARE_CFG_RECOVER,
-        CMD_HW_SPT_COMMON,   CMD_ENV_SPT_DOCKER, 0,
-        CMD_SPT_310P | CMD_SPT_910B | CMD_SPT_910_93},
-    {"nve-level",       NVE_LEVEL,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310_SOC | CMD_SPT_310B},
-    {"aicpu-config",    AICPU_CONF,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310_SOC},
-    {"mac-addr",            MAC_ADDR,
-        CMD_HW_SPT_CHIP, 0, 0, CMD_SPT_310B},
-    {"revocate",        REVOCATION,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B | CMD_SPT_910_93},
-    {"customized-info", CUSTOMIZED_INFO,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310P},
-    {"clear-ecc-info",  ECC_INFO_CLEAR,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B | CMD_SPT_310P_CARD | \
-        CMD_SPT_910_93 | CMD_SPT_950},
-    {"vnpu-mode",       VNPU_MODE,
-        CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B | CMD_SPT_910_93},
-    {"pkcs-enable",     PKCS_ENABLE,
-        CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310P_CARD},
-    {"create-vnpu",     VNPU_CREATE,
-        CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_VM, 0, CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | \
-        CMD_SPT_910B},
-    {"destroy-vnpu",    VNPU_DESTORY,
-        CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_VM, 0, CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | \
-        CMD_SPT_910B},
-    {"vnpu-svm",        SET_VNPU_SVM,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER},
-    {"tls-cert",        TLS_CERT,
-        CMD_HW_SPT_CHIP, 0, 0, CMD_SPT_910B | CMD_SPT_310P_CARD | CMD_SPT_910_93 | CMD_SPT_950},
-    {"tls-cert-period", TLS_CERT_PERIOD,
-        CMD_HW_SPT_CHIP, 0, 0, CMD_SPT_910B | CMD_SPT_310P_CARD | CMD_SPT_910_93 | CMD_SPT_950},
-    {"key-manage",      KEY_MANAGE,
-        CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0, CMD_SPT_MODEL | CMD_SPT_STATION | CMD_SPT_HILENS | CMD_SPT_SERVER | \
-        CMD_SPT_310_CARD | CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"cpu-num-cfg",     CPU_NUM_CFG,
-        CMD_HW_SPT_CHIP, 0, 0, CMD_SPT_310P_CARD | CMD_SPT_310P_SOC | CMD_SPT_310B},
-    {"vnpu-cfg-recover",    VNPU_CFG_RECOVER,
-        CMD_HW_SPT_COMMON,  CMD_ENV_SPT_VM, 0, CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | \
-        CMD_SPT_910B},
-    {"pwm-mode",        PWM_MODE,
-        CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310B_SOC_DK},
-    {"pwm-duty-ratio",  PWM_DUTY_RATIO,
-        CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310B_SOC_DK},
-    {"p2p-mem-cfg",    P2P_MEM_CFG,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310P_CARD},
-    {"power-state",    POWER_STATE, CMD_HW_SPT_CHIP, 0, 0, CMD_SPT_310B_SOC_DK },
-    {"boot-select",    BOOT_SEL, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310B_SOC_STATION},
-    {"reset-vnpu",    RESET_VNPU, CMD_HW_SPT_CARD, CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910B },
-    {"cpu-freq-up",      CPU_FREQ_UP,
-        CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310P_CARD},
-    {"sys-log-dump",   SYS_LOG_DUMP,
-        CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0, CMD_SPT_310P_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"clear-syslog-cfg",   CLEAR_SYSLOG_CFG,
-        CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0, CMD_SPT_310P_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"sys-log-enable",  SYS_LOG_ENABLE,
-        CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0, CMD_SPT_310P_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"custom-op", CUSTOM_OP,
-        CMD_HW_SPT_CARD_CHIP,   CMD_ENV_SPT_ALL, 0, CMD_SPT_910_93},
-    {"custom-op-cfg-recover", CUSTOM_OP_CFG_RECOVER,
-        CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_910_93},
-    {"custom-op-secverify-enable", CUSTOM_OP_SECVERIFY_ENABLE,
-        CMD_HW_SPT_CARD, CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0,
-        CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"custom-op-secverify-mode", CUSTOM_OP_SECVERIFY_MODE,
-        CMD_HW_SPT_CARD, CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0,
-        CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"op-timeout-cfg", OP_TIMEOUT,
-        CMD_HW_SPT_CHIP, CMD_ENV_SPT_ROOT, 0, CMD_SPT_910B | CMD_SPT_910_93},
+    {"ecc-enable", ECC_ENABLE, CMD_HW_SPT_CARD_CHIP, 0, CMD_WIN_SPT_ALL, CMD_SPT_310 | CMD_SPT_310P | CMD_SPT_310B},
+    {"collect-log", COLLECT_LOG, CMD_HW_SPT_CARD_CHIP, 0, CMD_SPT_310_CARD, CMD_SPT_MCU},
+    {"license", CUSTOMIZED_INFO, CMD_HW_SPT_CARD_CHIP, 0, CMD_SPT_310_CARD, CMD_SPT_310_CARD},
+    {"reset", RESET, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ROOT, CMD_SPT_310_CARD,
+     CMD_SPT_CARD | CMD_SPT_ALL_SERVER | CMD_SPT_MODEL | CMD_SPT_910B_CARD | CMD_SPT_910_93_CARD | CMD_SPT_950_CARD |
+         CMD_SPT_950_SERVER},
+    {"ssh-enable", SSH_ENABLE, CMD_HW_SPT_CARD_CHIP, 0, CMD_SPT_310_CARD,
+     CMD_SPT_STATION_HILEN | CMD_SPT_310_CARD | CMD_SPT_310P_CARD},
+    {"errcount-clear", ERR_COUNT_CLEAR, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310_CARD},
+    {"clear-pcie-err", ERR_COUNT_CLEAR, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310P_CARD},
+    {"mcu-monitor", MCU_MONITOR, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_STATION_HILEN},
+    {"boot-area", BOOT_AREA, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_STATION_HILEN},
+    {"disk-power", DISK_POWER, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_STATION_HILEN | CMD_SPT_310B},
+    {"ip", IP, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_STATION_HILEN | CMD_SPT_310_CARD},
+    {"device-share", DEVICE_SHARE, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_DOCKER, 0,
+     CMD_SPT_310_SOC | CMD_SPT_STATION_HILEN | CMD_SPT_310B | CMD_SPT_310P | CMD_SPT_910B | CMD_SPT_910_93},
+    {"device-share-cfg-recover", DEVICE_SHARE_CFG_RECOVER, CMD_HW_SPT_COMMON, CMD_ENV_SPT_DOCKER, 0,
+     CMD_SPT_310P | CMD_SPT_910B | CMD_SPT_910_93},
+    {"nve-level", NVE_LEVEL, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310_SOC | CMD_SPT_310B},
+    {"aicpu-config", AICPU_CONF, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310_SOC},
+    {"mac-addr", MAC_ADDR, CMD_HW_SPT_CHIP, 0, 0, CMD_SPT_310B},
+    {"revocate", REVOCATION, CMD_HW_SPT_CARD_CHIP, 0, 0,
+     CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B | CMD_SPT_910_93},
+    {"customized-info", CUSTOMIZED_INFO, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310P},
+    {"clear-ecc-info", ECC_INFO_CLEAR, CMD_HW_SPT_CARD_CHIP, 0, 0,
+     CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B | CMD_SPT_310P_CARD | CMD_SPT_910_93 | CMD_SPT_950},
+    {"vnpu-mode", VNPU_MODE, CMD_HW_SPT_COMMON, 0, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B | CMD_SPT_910_93},
+    {"pkcs-enable", PKCS_ENABLE, CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310P_CARD},
+    {"create-vnpu", VNPU_CREATE, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_VM, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B},
+    {"destroy-vnpu", VNPU_DESTORY, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_VM, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B},
+    {"vnpu-svm", SET_VNPU_SVM, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER},
+    {"tls-cert", TLS_CERT, CMD_HW_SPT_CHIP, 0, 0, CMD_SPT_910B | CMD_SPT_310P_CARD | CMD_SPT_910_93 | CMD_SPT_950},
+    {"tls-cert-period", TLS_CERT_PERIOD, CMD_HW_SPT_CHIP, 0, 0,
+     CMD_SPT_910B | CMD_SPT_310P_CARD | CMD_SPT_910_93 | CMD_SPT_950},
+    {"key-manage", KEY_MANAGE, CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0,
+     CMD_SPT_MODEL | CMD_SPT_STATION | CMD_SPT_HILENS | CMD_SPT_SERVER | CMD_SPT_310_CARD | CMD_SPT_310P_CARD |
+         CMD_SPT_910_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"cpu-num-cfg", CPU_NUM_CFG, CMD_HW_SPT_CHIP, 0, 0, CMD_SPT_310P_CARD | CMD_SPT_310P_SOC | CMD_SPT_310B},
+    {"vnpu-cfg-recover", VNPU_CFG_RECOVER, CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910_CARD | CMD_SPT_SERVER | CMD_SPT_910B},
+    {"pwm-mode", PWM_MODE, CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310B_SOC_DK},
+    {"pwm-duty-ratio", PWM_DUTY_RATIO, CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_310B_SOC_DK},
+    {"p2p-mem-cfg", P2P_MEM_CFG, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310P_CARD},
+    {"power-state", POWER_STATE, CMD_HW_SPT_CHIP, 0, 0, CMD_SPT_310B_SOC_DK},
+    {"boot-select", BOOT_SEL, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310B_SOC_STATION},
+    {"reset-vnpu", RESET_VNPU, CMD_HW_SPT_CARD, CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910B},
+    {"cpu-freq-up", CPU_FREQ_UP, CMD_HW_SPT_CARD_CHIP, 0, 0, CMD_SPT_310P_CARD},
+    {"sys-log-dump", SYS_LOG_DUMP, CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"clear-syslog-cfg", CLEAR_SYSLOG_CFG, CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"sys-log-enable", SYS_LOG_ENABLE, CMD_HW_SPT_COMMON, CMD_ENV_SPT_VM, 0,
+     CMD_SPT_310P_CARD | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"custom-op", CUSTOM_OP, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_910_93},
+    {"custom-op-cfg-recover", CUSTOM_OP_CFG_RECOVER, CMD_HW_SPT_COMMON, 0, 0, CMD_SPT_910_93},
+    {"custom-op-secverify-enable", CUSTOM_OP_SECVERIFY_ENABLE, CMD_HW_SPT_CARD,
+     CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"custom-op-secverify-mode", CUSTOM_OP_SECVERIFY_MODE, CMD_HW_SPT_CARD,
+     CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"op-timeout-cfg", OP_TIMEOUT, CMD_HW_SPT_CHIP, CMD_ENV_SPT_ROOT, 0, CMD_SPT_910B | CMD_SPT_910_93},
     {"custom-op-secverify-cert", CUSTOM_OP_SECVERIFY_CERT, CMD_HW_SPT_CARD,
-        CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910B | CMD_SPT_910_93},
-    {"qos-master-config", QOS_MASTER_CONFIG, CMD_HW_SPT_CHIP,
-        CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910_93},
+     CMD_ENV_SPT_NON_ROOT | CMD_ENV_SPT_VM | CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910B | CMD_SPT_910_93},
+    {"qos-master-config", QOS_MASTER_CONFIG, CMD_HW_SPT_CHIP, CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910_93},
     {"multi-die-policy", MULTI_DIE_POLICY, CMD_HW_SPT_COMMON, CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910_93},
-    {"multi-die-policy-cfg-recover", MULTI_DIE_POLICY_CFG_RECOVER,
-        CMD_HW_SPT_COMMON, CMD_ENV_SPT_DOCKER, 0, CMD_SPT_910_93},
-    { NULL }
-};
+    {"multi-die-policy-cfg-recover", MULTI_DIE_POLICY_CFG_RECOVER, CMD_HW_SPT_COMMON, CMD_ENV_SPT_DOCKER, 0,
+     CMD_SPT_910_93},
+    {NULL}};
 
 static struct npu_smi_type_map g_type_clear_map_list[] = {
     {"ecc-info", ECC_INFO, CMD_HW_SPT_CARD_CHIP, 0, 0,
@@ -329,16 +237,12 @@ static struct npu_smi_type_map g_type_clear_map_list[] = {
 
 // upgrade的命令比较特殊，非root，容器，虚拟机中都要设置成支持
 static struct npu_smi_type_map g_type_upgrade_map_list[] = {
-    {"mcu",         MCU_ITEM,
-     CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_SPT_310_CARD, CMD_SPT_MCU},
-    {"bootloader",  BOOTLOADER,
-     CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_SPT_310_CARD, CMD_SPT_STATION_HILEN},
-    {"vrd",         VRD_ITEM,
-     CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_310P | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
-    {"vdm",         VDM_ITEM,
-     CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_950_SERVER | CMD_SPT_950_SOC},
-    { NULL }
-};
+    {"mcu", MCU_ITEM, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_SPT_310_CARD, CMD_SPT_MCU},
+    {"bootloader", BOOTLOADER, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, CMD_SPT_310_CARD, CMD_SPT_STATION_HILEN},
+    {"vrd", VRD_ITEM, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0,
+     CMD_SPT_310P | CMD_SPT_910B | CMD_SPT_910_93 | CMD_SPT_950},
+    {"vdm", VDM_ITEM, CMD_HW_SPT_CARD_CHIP, CMD_ENV_SPT_ALL, 0, CMD_SPT_950_SERVER | CMD_SPT_950_SOC},
+    {NULL}};
 
 void npu_smi_info_map_load()
 {
@@ -435,8 +339,8 @@ int set_qos_cfg_para_parse(struct npu_smi_operate_info *operate_info, int cur, i
         }
         len = strlen(argv[cur + i]);
         if (pos + len + 1 > NPU_MAX_LENTH) {
-            gplog(LOG_ERR, "Parameter missing at index %d, expected %d QoS parameters, but parameter %d is NULL.",
-                i, QOS_MAX, i);
+            gplog(LOG_ERR, "Parameter missing at index %d, expected %d QoS parameters, but parameter %d is NULL.", i,
+                  QOS_MAX, i);
             return NPU_ERR_CODE_INNER_ERR;
         }
         ret = strcpy_s(operate_info->sdata + pos, NPU_MAX_LENTH - pos, argv[cur + i]);
@@ -444,7 +348,7 @@ int set_qos_cfg_para_parse(struct npu_smi_operate_info *operate_info, int cur, i
             gplog(LOG_ERR, "call strcpy_s failed, ret = %d", ret);
             return NPU_ERR_CODE_SECURE_FUN_FAIL;
         }
-        pos += len + 1;  // +1 for the \0
+        pos += len + 1; // +1 for the \0
     }
     operate_info->sdata[pos] = '\0';
     return NPU_OK;
@@ -502,12 +406,11 @@ static int check_conflict_commands(char *command, int *single_flag, int *i_flag,
     return NPU_OK;
 }
 
-
 static void check_npu_utilization_support(struct npu_smi_operate_info *operate_info)
 {
     enum npu_chip_type chip_type = npu_get_chip_type();
-    bool npu_utilization_support_type = (chip_type == NPU_CHIP_910B ||
-        chip_type == NPU_CHIP_910_93 || chip_type == NPU_CHIP_950);
+    bool npu_utilization_support_type = (chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_910_93 ||
+                                         chip_type == NPU_CHIP_950);
     if (operate_info->watch_stype[NPU_UTILIZATION_TYPE] != NPU_DEFAULT_VALUE && !npu_utilization_support_type) {
         operate_info->watch_stype[NPU_UTILIZATION_TYPE] = NPU_DEFAULT_VALUE;
     }
@@ -516,8 +419,8 @@ static void check_npu_utilization_support(struct npu_smi_operate_info *operate_i
 static void check_ai_cube_support(struct npu_smi_operate_info *operate_info)
 {
     int chip_type = npu_get_chip_type();
-    bool ai_cube_support_type = (chip_type == NPU_CHIP_910B ||
-        chip_type == NPU_CHIP_910_93 || chip_type == NPU_CHIP_950);
+    bool ai_cube_support_type = (chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_910_93 ||
+                                 chip_type == NPU_CHIP_950);
     if (operate_info->watch_stype[AI_CUBE_TYPE] != NPU_DEFAULT_VALUE && !ai_cube_support_type) {
         operate_info->watch_stype[AI_CUBE_TYPE] = NPU_DEFAULT_VALUE;
     }
@@ -588,18 +491,9 @@ int parse_npu_info_param(struct npu_smi_operate_info *operate_info, int argc, ch
 }
 
 static struct npu_smi_parse_param g_parse_set_param_arr[] = {
-    { "-t", parse_type_param},
-    { "-i", parse_card_param},
-    { "-c", parse_chip_param},
-    { "-s", parse_str_param},
-    { "-d", parse_enable_param},
-    { "-v", parse_multi_param},
-    { "-g", parse_virgroup_id_param},
-    { "-m", parse_chan_param},
-    { "-f", parse_fdata_param},
-    { "-h", parse_help_param},
-    { "--help", parse_help_param},
-    { NULL },
+    {"-t", parse_type_param},   {"-i", parse_card_param},  {"-c", parse_chip_param},        {"-s", parse_str_param},
+    {"-d", parse_enable_param}, {"-v", parse_multi_param}, {"-g", parse_virgroup_id_param}, {"-m", parse_chan_param},
+    {"-f", parse_fdata_param},  {"-h", parse_help_param},  {"--help", parse_help_param},    {NULL},
 };
 
 static void npu_print_not_support(struct npu_smi_operate_info *operate_info, int i, char **argv)
@@ -611,8 +505,8 @@ static void npu_print_not_support(struct npu_smi_operate_info *operate_info, int
     }
 }
 
-int parse_npu_setqos_master_cfg_param(struct npu_smi_operate_info *operate_info,
-    struct npu_smi_parse_param *param_info, int cur, int argc, char **argv)
+int parse_npu_setqos_master_cfg_param(struct npu_smi_operate_info *operate_info, struct npu_smi_parse_param *param_info,
+                                      int cur, int argc, char **argv)
 {
     int ret = 0, tmp = 0;
     ret = param_info->parse_proc(operate_info, cur, argc, (const char **)argv);
@@ -683,15 +577,9 @@ int parse_npu_set_param(struct npu_smi_operate_info *operate_info, int argc, cha
 }
 
 static struct npu_smi_parse_param g_parse_upgrade_param_arr[] = {
-    { "-i", parse_card_param},
-    { "-t", parse_upgrade_type_param},
-    { "-f", parse_mcu_file_param},
-    { "-q", parse_upgrade_query_param},
-    { "-b", parse_upgrade_version_param},
-    { "-a", parse_upgrade_active_param},
-    { "-h", parse_upgrade_help_param},
-    { "--help", parse_upgrade_help_param},
-    { NULL },
+    {"-i", parse_card_param},          {"-t", parse_upgrade_type_param},     {"-f", parse_mcu_file_param},
+    {"-q", parse_upgrade_query_param}, {"-b", parse_upgrade_version_param},  {"-a", parse_upgrade_active_param},
+    {"-h", parse_upgrade_help_param},  {"--help", parse_upgrade_help_param}, {NULL},
 };
 
 int parse_npu_upgrade_param(struct npu_smi_operate_info *operate_info, int argc, char **argv)
@@ -725,8 +613,8 @@ int parse_npu_upgrade_param(struct npu_smi_operate_info *operate_info, int argc,
         }
     }
 
-    if ((!operate_info->has_id) &&
-        (strcmp("-h", param_info->param) != 0) && (strcmp("--help", param_info->param) != 0)) {
+    if ((!operate_info->has_id) && (strcmp("-h", param_info->param) != 0) &&
+        (strcmp("--help", param_info->param) != 0)) {
         printf("\nThis command must input card id.\n\n");
         return NPU_ERR_CODE_INVALID_PARAMETER;
     }
@@ -735,12 +623,8 @@ int parse_npu_upgrade_param(struct npu_smi_operate_info *operate_info, int argc,
 }
 
 static struct npu_smi_parse_param g_parse_clear_param_arr[] = {
-    { "-t", parse_type_param},
-    { "-i", parse_card_param},
-    { "-c", parse_chip_param},
-    { "-h", parse_help_param},
-    { "--help", parse_help_param},
-    { NULL },
+    {"-t", parse_type_param}, {"-i", parse_card_param},     {"-c", parse_chip_param},
+    {"-h", parse_help_param}, {"--help", parse_help_param}, {NULL},
 };
 
 int parse_npu_clear_param(struct npu_smi_operate_info *operate_info, int argc, char **argv)
@@ -778,7 +662,8 @@ int parse_npu_clear_param(struct npu_smi_operate_info *operate_info, int argc, c
 int is_npu_syslog_type_support(int argc_num, char **argv)
 {
     if (((strcmp(argv[argc_num], "sys-log-dump") == 0) || (strcmp(argv[argc_num], "clear-syslog-cfg") == 0) ||
-        (strcmp(argv[argc_num], "sys-log-enable") == 0)) && !npu_is_in_docker()) {
+         (strcmp(argv[argc_num], "sys-log-enable") == 0)) &&
+        !npu_is_in_docker()) {
         return TRUE;
     }
     return FALSE;
@@ -786,8 +671,7 @@ int is_npu_syslog_type_support(int argc_num, char **argv)
 
 static int is_reset_vnpu_supported(int chip_type, const char *arg)
 {
-    return (chip_type == NPU_CHIP_910B) &&
-           ((strcmp(arg, "reset-vnpu") == 0) || (strcmp(arg, "reset") == 0));
+    return (chip_type == NPU_CHIP_910B) && ((strcmp(arg, "reset-vnpu") == 0) || (strcmp(arg, "reset") == 0));
 }
 
 static int is_custom_op_secverify_mode_or_cert_supported(int chip_type, const char *arg)
@@ -803,14 +687,13 @@ static int is_basic_reset_supported(int chip_type, const char *arg)
 
 static int is_op_timeout_supported(int chip_type, const char *arg)
 {
-    return (chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_910_93) &&
-        (strcmp(arg, "op-timeout-cfg") == 0);
+    return (chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_910_93) && (strcmp(arg, "op-timeout-cfg") == 0);
 }
 
 static int is_device_share_and_recover_supported(int chip_type, const char *arg)
 {
-    return (chip_type == NPU_CHIP_910B|| chip_type == NPU_CHIP_910_93|| chip_type == NPU_CHIP_310P) &&
-        ((strcmp(arg, "device-share") == 0) || (strcmp(arg, "device-share-cfg-recover") == 0));
+    return (chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_910_93 || chip_type == NPU_CHIP_310P) &&
+           ((strcmp(arg, "device-share") == 0) || (strcmp(arg, "device-share-cfg-recover") == 0));
 }
 
 static int is_qos_master_config_supported(int chip_type, const char *arg)
@@ -821,11 +704,10 @@ static int is_qos_master_config_supported(int chip_type, const char *arg)
 static int set_type_is_support(int chip_type, const char *input_str)
 {
     return is_reset_vnpu_supported(chip_type, input_str) ||
-        is_custom_op_secverify_mode_or_cert_supported(chip_type, input_str) ||
-        is_basic_reset_supported(chip_type, input_str) ||
-        is_device_share_and_recover_supported(chip_type, input_str) ||
-        is_qos_master_config_supported(chip_type, input_str) ||
-        is_op_timeout_supported(chip_type, input_str);
+           is_custom_op_secverify_mode_or_cert_supported(chip_type, input_str) ||
+           is_basic_reset_supported(chip_type, input_str) ||
+           is_device_share_and_recover_supported(chip_type, input_str) ||
+           is_qos_master_config_supported(chip_type, input_str) || is_op_timeout_supported(chip_type, input_str);
 }
 
 int type_support_in_vm_or_docker(int argc, char **argv)
@@ -908,9 +790,8 @@ int check_cmd_is_vnpu(char **argv, int index)
     if (argv == NULL) {
         return NPU_ERR_CODE_INVALID_PARAMETER;
     }
-    char cmd[CMD_NUM][CMD_LEN] = {"info-vnpu", "vnpu-svm", "vnpu-mode",
-        "vnpu-cfg-recover", "template-info", "create-vnpu", "destroy-vnpu",
-        "reset-vnpu"};
+    char cmd[CMD_NUM][CMD_LEN] = {"info-vnpu",     "vnpu-svm",    "vnpu-mode",    "vnpu-cfg-recover",
+                                  "template-info", "create-vnpu", "destroy-vnpu", "reset-vnpu"};
     for (i = 0; i < CMD_NUM; i++) {
         if (strcmp(argv[index], cmd[i]) == 0) {
             return TRUE;
