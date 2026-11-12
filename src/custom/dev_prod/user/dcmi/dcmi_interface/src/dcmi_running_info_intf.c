@@ -62,7 +62,7 @@ int dcmi_get_device_power_info(int card_id, int device_id, int *power)
 
         return dcmi_mcu_get_power_info(card_id, power);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -242,7 +242,7 @@ int dcmi_get_device_temperature(int card_id, int device_id, int *temperature)
     } else if (device_type == MCU_TYPE) {
         return dcmi_mcu_get_temperature(card_id, temperature);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -279,7 +279,7 @@ int dcmi_get_device_voltage(int card_id, int device_id, unsigned int *voltage)
     } else if (device_type == MCU_TYPE) {
         return dcmi_mcu_get_voltage(card_id, voltage);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -314,7 +314,7 @@ int dcmi_get_device_ecc_info(int card_id, int device_id, enum dcmi_device_type i
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_ecc_info(card_id, device_id, input_type, device_ecc_info);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -357,7 +357,7 @@ int dcmi_get_device_frequency(int card_id, int device_id, enum dcmi_freq_type in
         return dcmi_cpu_get_device_frequency(card_id, device_id, frequency);
 #endif
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -386,7 +386,7 @@ int dcmi_get_device_hbm_info(int card_id, int device_id, struct dcmi_hbm_info *h
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_hbm_info(card_id, device_id, hbm_info);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -419,7 +419,7 @@ int dcmi_get_device_memory_info_v2(int card_id, int device_id, struct dcmi_memor
         return dcmi_cpu_get_memory_info(card_id, memory_info);
 #endif
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -459,7 +459,7 @@ int dcmi_get_device_memory_info_v3(int card_id, int device_id, struct dcmi_get_m
         return err;
 #endif
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -488,7 +488,7 @@ int dcmi_get_device_utilization_rate(int card_id, int device_id, int input_type,
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_device_utilization_rate(card_id, device_id, input_type, utilization_rate);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -517,7 +517,7 @@ int dcmi_get_device_multi_utilization_rate(int card_id, int device_id, struct dc
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_device_utilization_rate_v2(card_id, device_id, util_info);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -566,7 +566,7 @@ int dcmi_get_device_sensor_info(int card_id, int device_id, enum dcmi_manager_se
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_soc_sensor_info(card_id, device_id, sensor_id, sensor_info);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -614,7 +614,7 @@ int dcmi_get_device_cgroup_info(int card_id, int device_id, struct dcmi_cgroup_i
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_device_cgroup_info(card_id, device_id, cg_info);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -643,7 +643,7 @@ int dcmi_get_device_llc_perf_para(int card_id, int device_id, struct dcmi_llc_pe
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_device_llc_perf_para(card_id, device_id, perf_para);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 
@@ -674,7 +674,7 @@ int dcmi_get_device_network_health(int card_id, int device_id, enum dcmi_rdfx_de
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_device_network_health(card_id, device_id, result);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 
@@ -705,7 +705,7 @@ int dcmi_get_device_fan_count(int card_id, int device_id, int *count)
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_device_fan_count(card_id, device_id, count);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 
@@ -741,7 +741,7 @@ int dcmi_get_device_fan_speed(int card_id, int device_id, int fan_id, int *speed
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_device_fan_speed(card_id, device_id, fan_id, speed);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 
@@ -825,7 +825,7 @@ int dcmi_set_power_state(int card_id, int device_id, struct dcmi_power_state_inf
         }
         gplog(LOG_OP, "Set the power state for chip %d of card success.sleep_time=%u.", device_id, power_info.value);
     } else {
-        gplog(LOG_OP, "device_type %d is not support.", device_type);
+        gplog(LOG_OP, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
     return err;
@@ -992,7 +992,7 @@ int dcmi_get_device_cpu_freq_info(int card_id, int device_id, int *enable_flag)
         if (device_type == NPU_TYPE) {
             return dcmi_get_npu_device_cpu_freq_info(card_id, device_id, enable_flag);
         } else {
-            gplog(LOG_ERR, "device_type is not support.%d.", device_type);
+            gplog(LOG_ERR, "device_type is not supported.%d.", device_type);
             return DCMI_ERR_CODE_NOT_SUPPORT;
         }
     } else {
@@ -1205,7 +1205,7 @@ int dcmi_get_device_mac(int card_id, int device_id, int mac_id, char *mac_addr, 
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_device_mac(card_id, device_id, mac_id, mac_addr, len);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 
@@ -1268,7 +1268,7 @@ int dcmi_get_device_gateway(int card_id, int device_id, enum dcmi_port_type inpu
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_device_gateway(card_id, device_id, input_type, port_id, gateway);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 
@@ -1309,7 +1309,7 @@ int dcmi_get_device_ip(int card_id, int device_id, enum dcmi_port_type input_typ
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_device_ip(card_id, device_id, input_type, port_id, ip, mask);
     } else {
-        gplog(LOG_ERR, "device_type %d is not support.", device_type);
+        gplog(LOG_ERR, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -1338,7 +1338,7 @@ int dcmi_get_device_share_enable(int card_id, int device_id, int *enable_flag)
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_device_share_enable(card_id, device_id, enable_flag);
     } else {
-        gplog(LOG_INFO, "device_type %d is not support.", device_type);
+        gplog(LOG_INFO, "device_type %d is not supported.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -1426,7 +1426,7 @@ int dcmi_get_device_cpu_num_config(int card_id, int device_id, unsigned char *bu
     if (device_type == NPU_TYPE) {
         return dcmi_get_user_config(card_id, device_id, "cpu_num_cfg", buf_size, buf);
     } else {
-        gplog(LOG_INFO, "device_type is not support.%d.", device_type);
+        gplog(LOG_INFO, "device_type is not supported.%d.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }
@@ -1548,7 +1548,7 @@ int dcmi_get_custom_op_status(int card_id, int device_id, int *enable_flag)
     if (device_type == NPU_TYPE) {
         return dcmi_get_npu_custom_op_status(card_id, device_id, enable_flag);
     } else {
-        gplog(LOG_INFO, "device_type is not support.%d.", device_type);
+        gplog(LOG_INFO, "device_type is not supported.%d.", device_type);
         return DCMI_ERR_CODE_NOT_SUPPORT;
     }
 }

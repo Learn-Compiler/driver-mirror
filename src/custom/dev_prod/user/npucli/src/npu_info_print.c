@@ -28,15 +28,15 @@
 #include "npu_chip_info.h"
 #include "npu_info_print.h"
 
-#define     PERCENTAGE           100
-#define     HCCS_LANE_SPEED      56
-#define     SINGLE_PACKETS_BYTES 20
-#define     G_ARR_DIM            2
-#define     G_ARR1_ROW           16
-#define     G_ARR2_ROW           8
-#define     G_ARR_COL            8
-#define     ONE_GHZ              1000000000.0
-#define     CONVERSION_MS        1000
+#define PERCENTAGE 100
+#define HCCS_LANE_SPEED 56
+#define SINGLE_PACKETS_BYTES 20
+#define G_ARR_DIM 2
+#define G_ARR1_ROW 16
+#define G_ARR2_ROW 8
+#define G_ARR_COL 8
+#define ONE_GHZ 1000000000.0
+#define CONVERSION_MS 1000
 
 struct chip_watch_info_print_hook {
     int type;
@@ -47,10 +47,8 @@ void print_npu_watch_header(const int *stype, const int stype_len)
 {
     int i;
 
-    const char *type_header[] = {
-        "Pwr(W)",      "Temp(C)",   "AI Core(%)",   "AI Cpu(%)",
-        "Ctrl Cpu(%)", "Memory(%)", "Memory BW(%)", "NPU Util(%)", "AI Cube(%)"
-    };
+    const char *type_header[] = {"Pwr(W)",    "Temp(C)",      "AI Core(%)",  "AI Cpu(%)", "Ctrl Cpu(%)",
+                                 "Memory(%)", "Memory BW(%)", "NPU Util(%)", "AI Cube(%)"};
 #ifndef NPU_SMI_V2
     printf("%-12s%-12s", "NpuID(Idx)", "ChipId(Idx)");
 #else
@@ -180,8 +178,8 @@ void print_chip_watch_info(int card_id, int device_id, struct npu_chip_watch_inf
     int type;
     size_t table_size, i;
     enum npu_chip_type chip_type = npu_get_chip_type();
-    bool not_support_chip_type = (chip_type != NPU_CHIP_910B && chip_type != NPU_CHIP_910_93
-                            && chip_type != NPU_CHIP_950);
+    bool not_support_chip_type = (chip_type != NPU_CHIP_910B && chip_type != NPU_CHIP_910_93 &&
+                                  chip_type != NPU_CHIP_950);
 
     // 定义函数指针变量，用于动态选择MEMORY_TYPE和MEMORY_BANDWIDTH_TYPE的函数
     void (*memory_func)(struct npu_chip_watch_info *) = print_chip_watch_hbm_info;
@@ -194,14 +192,10 @@ void print_chip_watch_info(int card_id, int device_id, struct npu_chip_watch_inf
     }
 
     struct chip_watch_info_print_hook info_print[] = {
-        {POWER_TYPE, print_chip_watch_pwr_info},
-        {TEMP_TYPE, print_chip_watch_temp_info},
-        {AI_CORE_TYPE, print_chip_watch_ai_core_info},
-        {AI_CPU_TYPE, print_chip_watch_ai_cpu_info},
-        {CTRL_CPU_TYPE, print_chip_watch_ctrl_cpu_info},
-        {MEMORY_TYPE, memory_func},
-        {MEMORY_BANDWIDTH_TYPE, memory_bandwidth_func},
-        {NPU_UTILIZATION_TYPE, print_chip_npu_utilization_info},
+        {POWER_TYPE, print_chip_watch_pwr_info},         {TEMP_TYPE, print_chip_watch_temp_info},
+        {AI_CORE_TYPE, print_chip_watch_ai_core_info},   {AI_CPU_TYPE, print_chip_watch_ai_cpu_info},
+        {CTRL_CPU_TYPE, print_chip_watch_ctrl_cpu_info}, {MEMORY_TYPE, memory_func},
+        {MEMORY_BANDWIDTH_TYPE, memory_bandwidth_func},  {NPU_UTILIZATION_TYPE, print_chip_npu_utilization_info},
         {AI_CUBE_TYPE, print_chip_watch_ai_cube_info},
     };
 
@@ -238,25 +232,25 @@ void print_card_total_info_first(struct npu_card_total_info *card_info, int chip
     }
 #ifdef _WIN32
     printf("| %-7d %-22s| %-15s | %-12.1f %-17d %-6s/ %-13s |\n", card_info->card_id,
-        card_info->chip_info[chip_index].chip_name, &health_info[0],
-        card_info->chip_common_info[chip_index].power * NPU_DECIMAL_TRANS,
-        card_info->chip_common_info[chip_index].temp, "NA", "NA");
+           card_info->chip_info[chip_index].chip_name, &health_info[0],
+           card_info->chip_common_info[chip_index].power * NPU_DECIMAL_TRANS,
+           card_info->chip_common_info[chip_index].temp, "NA", "NA");
 #else
     if (npu_get_chip_type() == NPU_CHIP_310P) {
         printf("| %-7d %-22s| %-15s | %-12s %-17d %-6lu/ %-13lu |\n", card_info->card_id,
-            card_info->chip_info[chip_index].chip_name, &health_info[0], "NA",
-            card_info->chip_common_info[chip_index].temp,
-            card_info->chip_memory_info[chip_index].hugepages_total -
-            card_info->chip_memory_info[chip_index].hugepages_free,
-            card_info->chip_memory_info[chip_index].hugepages_total);
+               card_info->chip_info[chip_index].chip_name, &health_info[0], "NA",
+               card_info->chip_common_info[chip_index].temp,
+               card_info->chip_memory_info[chip_index].hugepages_total -
+                   card_info->chip_memory_info[chip_index].hugepages_free,
+               card_info->chip_memory_info[chip_index].hugepages_total);
     } else {
         printf("| %-7d %-22s| %-15s | %-12.1f %-17d %-6lu/ %-13lu |\n", card_info->card_id,
-            card_info->chip_info[chip_index].chip_name, &health_info[0],
-            card_info->chip_common_info[chip_index].power * NPU_DECIMAL_TRANS,
-            card_info->chip_common_info[chip_index].temp,
-            card_info->chip_memory_info[chip_index].hugepages_total -
-            card_info->chip_memory_info[chip_index].hugepages_free,
-            card_info->chip_memory_info[chip_index].hugepages_total);
+               card_info->chip_info[chip_index].chip_name, &health_info[0],
+               card_info->chip_common_info[chip_index].power * NPU_DECIMAL_TRANS,
+               card_info->chip_common_info[chip_index].temp,
+               card_info->chip_memory_info[chip_index].hugepages_total -
+                   card_info->chip_memory_info[chip_index].hugepages_free,
+               card_info->chip_memory_info[chip_index].hugepages_total);
     }
 #endif
     return;
@@ -281,17 +275,16 @@ void print_card_total_info_second(struct npu_card_total_info *card_info, int chi
 
     if (card_info->is_has_pcie == TRUE) {
         printf("| %-7d %-22d| %04X:%02X:%02X.%-4X | %-12u %-5d/ %-32llu |\n", chip_index, device_logic_id,
-            card_info->device_pcie_info[chip_index].domain,
-            card_info->device_pcie_info[chip_index].bdf_busid, card_info->device_pcie_info[chip_index].bdf_deviceid,
-            card_info->device_pcie_info[chip_index].bdf_funcid, card_info->chip_common_info[chip_index].npu_usage,
-            memory_used, memory_total);
+               card_info->device_pcie_info[chip_index].domain, card_info->device_pcie_info[chip_index].bdf_busid,
+               card_info->device_pcie_info[chip_index].bdf_deviceid, card_info->device_pcie_info[chip_index].bdf_funcid,
+               card_info->chip_common_info[chip_index].npu_usage, memory_used, memory_total);
     } else {
         if (card_info->chip_memory_info[chip_index].utiliza == NPU_DEFAULT_VALUE) {
             printf("| %-7d %-22d| %-15s | %-12u %-3s/ %-34llu |\n", chip_index, device_logic_id, "NA",
-                card_info->chip_common_info[chip_index].npu_usage, "NA", memory_total);
+                   card_info->chip_common_info[chip_index].npu_usage, "NA", memory_total);
         } else {
             printf("| %-7d %-22d| %-15s | %-12u %-5d/ %-32llu |\n", chip_index, device_logic_id, "NA",
-                card_info->chip_common_info[chip_index].npu_usage, memory_used, memory_total);
+                   card_info->chip_common_info[chip_index].npu_usage, memory_used, memory_total);
         }
     }
     return;
@@ -311,10 +304,10 @@ void print_proc_total_info(struct npu_card_total_info *card_info)
         for (proc_index = 0; proc_index < card_info->proc_nums[chip_index]; proc_index++) {
             process_num++;
             printf("| %-7d %-22d| %-15d | %-24s | %-25lu |\n", card_info->card_id, chip_index,
-                card_info->chip_proc_info[chip_index][proc_index].proc_id,
-                card_info->chip_proc_name[chip_index][proc_index],
-                (unsigned long)(card_info->chip_proc_info[chip_index][proc_index].proc_mem_usage /
-                    BYTE_TO_KB_TRANS_VALUE / KB_TO_MB_TRANS_VALUE));
+                   card_info->chip_proc_info[chip_index][proc_index].proc_id,
+                   card_info->chip_proc_name[chip_index][proc_index],
+                   (unsigned long)(card_info->chip_proc_info[chip_index][proc_index].proc_mem_usage /
+                                   BYTE_TO_KB_TRANS_VALUE / KB_TO_MB_TRANS_VALUE));
             if (proc_index == MAX_CHIP_PROCESS_NUM - 1) { // 防止进程信息刷屏
                 break;
             }
@@ -322,11 +315,12 @@ void print_proc_total_info(struct npu_card_total_info *card_info)
     }
 
     if (!process_num) {
-        printf("| No running processes found in NPU %-7d                 "\
-            "                                             |\n", card_info->card_id);
+        printf("| No running processes found in NPU %-7d                 "
+               "                                             |\n",
+               card_info->card_id);
     }
-    printf("+===============================+======="\
-        "==========+======================================================+\n");
+    printf("+===============================+======="
+           "==========+======================================================+\n");
     return;
 }
 
@@ -338,13 +332,13 @@ void print_card_total_info(struct npu_card_total_info *card_info)
         print_card_total_info_second(card_info, chip_index);
 
         if (chip_index != card_info->chip_count - 1) {
-            printf("+-------------------------------+-----------------+"\
-                "------------------------------------------------------+\n");
+            printf("+-------------------------------+-----------------+"
+                   "------------------------------------------------------+\n");
         }
     }
 
-    printf("+===============================+======="\
-        "==========+======================================================+\n");
+    printf("+===============================+======="
+           "==========+======================================================+\n");
     return;
 }
 
@@ -352,23 +346,23 @@ void print_total_info(struct npu_total_info *npu_total_info)
 {
     int card_index;
     bool check_result = (npu_board_type_is_card() || npu_board_type_is_station() || npu_board_type_is_hilens() ||
-        npu_board_type_is_server() || npu_board_type_is_model());
+                         npu_board_type_is_server() || npu_board_type_is_model());
 
-    printf("+------------------------------------------------------------------------"\
-        "--------------------------------+\n");
+    printf("+------------------------------------------------------------------------"
+           "--------------------------------+\n");
 #ifdef _WIN32
     printf("| %s %-40s Version: %-44s |\n", TOOL_NAME, TOOL_VERSION, TOOL_VERSION);
 #else
     printf("| %s %-40s Version: %-44s |\n", TOOL_NAME, TOOL_VERSION, npu_total_info->software_version);
 #endif
-    printf("+-------------------------------+-----------------+-----------------------"\
-        "-------------------------------+\n");
-    printf("| NPU     Name                  | Health          | Power(W)     Temp(C)  "\
-        "         Hugepages-Usage(page) |\n");
-    printf("| Chip    Device                | Bus-Id          | AICore(%%)    Memory-Usage(MB)"\
-        "                        |\n");
-    printf("+===============================+=================+======================="\
-        "===============================+\n");
+    printf("+-------------------------------+-----------------+-----------------------"
+           "-------------------------------+\n");
+    printf("| NPU     Name                  | Health          | Power(W)     Temp(C)  "
+           "         Hugepages-Usage(page) |\n");
+    printf("| Chip    Device                | Bus-Id          | AICore(%%)    Memory-Usage(MB)"
+           "                        |\n");
+    printf("+===============================+=================+======================="
+           "===============================+\n");
 
     for (card_index = 0; card_index < npu_total_info->card_count; card_index++) {
         struct npu_card_total_info *card_info = &npu_total_info->card_info[card_index];
@@ -376,12 +370,12 @@ void print_total_info(struct npu_total_info *npu_total_info)
     }
 
     if ((npu_get_chip_type() == NPU_CHIP_310 || npu_get_chip_type() == NPU_CHIP_310P) && check_result) {
-        printf("+-------------------------------+-----------------+-----------------------"\
-            "-------------------------------+\n");
-        printf("| NPU     Chip                  | Process id      | Process name          "\
-            "   | Process memory(MB)        |\n");
-        printf("+===============================+=================+======================="\
-            "===============================+\n");
+        printf("+-------------------------------+-----------------+-----------------------"
+               "-------------------------------+\n");
+        printf("| NPU     Chip                  | Process id      | Process name          "
+               "   | Process memory(MB)        |\n");
+        printf("+===============================+=================+======================="
+               "===============================+\n");
         for (card_index = 0; card_index < npu_total_info->card_count; card_index++) {
             struct npu_card_total_info *card_info = &npu_total_info->card_info[card_index];
             print_proc_total_info(card_info);
@@ -414,36 +408,29 @@ void print_card_total_info_with_HBM_first(struct npu_card_total_info *card_info,
         return;
     }
     if (chip_index == 1 && chip_type == NPU_CHIP_910_93) {
-        printf("| %-5d %-20s| %-13s | %-11s %-17d %-6lu/ %-13lu |\n",
-            card_info->card_id,
-            card_info->chip_info[chip_index].chip_name,
-            &health_info[0],
-            "-",
-            card_info->chip_common_info[chip_index].temp,
-            card_info->chip_memory_info[chip_index].hugepages_total -
-                card_info->chip_memory_info[chip_index].hugepages_free,
-            card_info->chip_memory_info[chip_index].hugepages_total);
-    } else {  // 910_93的die1不显示功耗
+        printf("| %-5d %-20s| %-13s | %-11s %-17d %-6lu/ %-13lu |\n", card_info->card_id,
+               card_info->chip_info[chip_index].chip_name, &health_info[0], "-",
+               card_info->chip_common_info[chip_index].temp,
+               card_info->chip_memory_info[chip_index].hugepages_total -
+                   card_info->chip_memory_info[chip_index].hugepages_free,
+               card_info->chip_memory_info[chip_index].hugepages_total);
+    } else { // 910_93的die1不显示功耗
 #ifdef NPU_SMI_V2
-        printf("| %-7d| %-17s| %-13s | %-11.1f %-17d %-6lu/ %-13lu |\n",
-            card_info->card_id,
-            card_info->chip_info[chip_index].chip_name,
-            &health_info[0],
-            card_info->chip_common_info[chip_index].power * NPU_DECIMAL_TRANS,
-            card_info->chip_common_info[chip_index].temp,
-            card_info->chip_memory_info[chip_index].hugepages_total -
-                card_info->chip_memory_info[chip_index].hugepages_free,
-            card_info->chip_memory_info[chip_index].hugepages_total);
+        printf("| %-7d| %-17s| %-13s | %-11.1f %-17d %-6lu/ %-13lu |\n", card_info->card_id,
+               card_info->chip_info[chip_index].chip_name, &health_info[0],
+               card_info->chip_common_info[chip_index].power * NPU_DECIMAL_TRANS,
+               card_info->chip_common_info[chip_index].temp,
+               card_info->chip_memory_info[chip_index].hugepages_total -
+                   card_info->chip_memory_info[chip_index].hugepages_free,
+               card_info->chip_memory_info[chip_index].hugepages_total);
 #else
-        printf("| %-5d %-20s| %-13s | %-11.1f %-17d %-6lu/ %-13lu |\n",
-            card_info->card_id,
-            card_info->chip_info[chip_index].chip_name,
-            &health_info[0],
-            card_info->chip_common_info[chip_index].power * NPU_DECIMAL_TRANS,
-            card_info->chip_common_info[chip_index].temp,
-            card_info->chip_memory_info[chip_index].hugepages_total -
-                card_info->chip_memory_info[chip_index].hugepages_free,
-            card_info->chip_memory_info[chip_index].hugepages_total);
+        printf("| %-5d %-20s| %-13s | %-11.1f %-17d %-6lu/ %-13lu |\n", card_info->card_id,
+               card_info->chip_info[chip_index].chip_name, &health_info[0],
+               card_info->chip_common_info[chip_index].power * NPU_DECIMAL_TRANS,
+               card_info->chip_common_info[chip_index].temp,
+               card_info->chip_memory_info[chip_index].hugepages_total -
+                   card_info->chip_memory_info[chip_index].hugepages_free,
+               card_info->chip_memory_info[chip_index].hugepages_total);
 #endif
     }
 }
@@ -461,23 +448,19 @@ void print_card_total_info_with_HBM_second(struct npu_card_total_info *card_info
     int hbm_used = (int)card_info->chip_hbm_info[chip_index].memory_usage;
 
     if ((card_info->chip_common_info[chip_index].npu_usage & (0x1 << DCMI_VF_FLAG_BIT)) != 0) {
-        card_info->chip_common_info[chip_index].npu_usage = 0;  // 算力分组场景获取的aicore利用率为0，实际无意义。
+        card_info->chip_common_info[chip_index].npu_usage = 0; // 算力分组场景获取的aicore利用率为0，实际无意义。
     }
 
     print_chip_info(chip_index, phyid);
 
     if (dcmi_mainboard_is_a900_a5_ub(g_mainboard_info.mainboard_id)) {
-        printf("%-11s   | %-11u %-5d/ %-10llu %-6d/ %-13llu |\n",
-            "NA", (card_info->chip_common_info[chip_index].npu_usage),
-            memory_used, memory_total, hbm_used, hbm_total);
+        printf("%-11s   | %-11u %-5d/ %-10llu %-6d/ %-13llu |\n", "NA",
+               (card_info->chip_common_info[chip_index].npu_usage), memory_used, memory_total, hbm_used, hbm_total);
     } else {
         printf("%04X:%02X:%02X.%-2X | %-11u %-5d/ %-10llu %-6d/ %-13llu |\n",
-            card_info->device_pcie_info[chip_index].domain,
-            card_info->device_pcie_info[chip_index].bdf_busid,
-            card_info->device_pcie_info[chip_index].bdf_deviceid,
-            card_info->device_pcie_info[chip_index].bdf_funcid,
-            (card_info->chip_common_info[chip_index].npu_usage),
-            memory_used, memory_total, hbm_used, hbm_total);
+               card_info->device_pcie_info[chip_index].domain, card_info->device_pcie_info[chip_index].bdf_busid,
+               card_info->device_pcie_info[chip_index].bdf_deviceid, card_info->device_pcie_info[chip_index].bdf_funcid,
+               (card_info->chip_common_info[chip_index].npu_usage), memory_used, memory_total, hbm_used, hbm_total);
     }
 }
 
@@ -500,18 +483,18 @@ void print_card_total_info_with_HBM(struct npu_card_total_info *card_info)
         print_card_total_info_with_HBM_first(card_info, chip_index);
         print_card_total_info_with_HBM_second(card_info, chip_index, phyid);
         if (chip_index != card_info->chip_count - 1) {
-            printf("+------------------------------------------------------"\
-            "-------------------------------------------+\n");
+            printf("+------------------------------------------------------"
+                   "-------------------------------------------+\n");
         }
     }
 
     if (card_info->chip_count > 0) {
 #ifdef NPU_SMI_V2
-        printf("+========+==================+===============+=========================="\
-        "===========================+\n");
+        printf("+========+==================+===============+=========================="
+               "===========================+\n");
 #else
-        printf("+===========================+===============+=========================="\
-        "===========================+\n");
+        printf("+===========================+===============+=========================="
+               "===========================+\n");
 #endif
     }
 
@@ -533,16 +516,16 @@ void print_proc_total_info_with_HBM(struct npu_card_total_info *card_info)
             process_num++;
 #ifdef NPU_SMI_V2
             printf("| %-26d | %-13d | %-24s | %-23lu |\n", card_info->card_id,
-                card_info->chip_proc_info[chip_index][proc_index].proc_id,
-                card_info->chip_proc_name[chip_index][proc_index],
-                (unsigned long)(card_info->chip_proc_info[chip_index][proc_index].proc_mem_usage /
-                    BYTE_TO_KB_TRANS_VALUE / KB_TO_MB_TRANS_VALUE));
+                   card_info->chip_proc_info[chip_index][proc_index].proc_id,
+                   card_info->chip_proc_name[chip_index][proc_index],
+                   (unsigned long)(card_info->chip_proc_info[chip_index][proc_index].proc_mem_usage /
+                                   BYTE_TO_KB_TRANS_VALUE / KB_TO_MB_TRANS_VALUE));
 #else
             printf("| %-7d %-18d| %-13d | %-24s | %-24lu |\n", card_info->card_id, chip_index,
-                card_info->chip_proc_info[chip_index][proc_index].proc_id,
-                card_info->chip_proc_name[chip_index][proc_index],
-                (unsigned long)(card_info->chip_proc_info[chip_index][proc_index].proc_mem_usage /
-                    BYTE_TO_KB_TRANS_VALUE / KB_TO_MB_TRANS_VALUE));
+                   card_info->chip_proc_info[chip_index][proc_index].proc_id,
+                   card_info->chip_proc_name[chip_index][proc_index],
+                   (unsigned long)(card_info->chip_proc_info[chip_index][proc_index].proc_mem_usage /
+                                   BYTE_TO_KB_TRANS_VALUE / KB_TO_MB_TRANS_VALUE));
 #endif
             if (proc_index == MAX_CHIP_PROCESS_NUM - 1) { // 防止进程信息刷屏
                 break;
@@ -551,18 +534,19 @@ void print_proc_total_info_with_HBM(struct npu_card_total_info *card_info)
     }
 
     if (!process_num) {
-        printf("| No running processes found in NPU %-7d                      "\
-            "                                 |\n", card_info->card_id);
+        printf("| No running processes found in NPU %-7d                      "
+               "                                 |\n",
+               card_info->card_id);
     }
 
-    printf("+===========================+======="\
-        "========+=====================================================+\n");
+    printf("+===========================+======="
+           "========+=====================================================+\n");
     return;
 }
 
-bool check_file(const char* filename, const char* str)
+bool check_file(const char *filename, const char *str)
 {
-    FILE* fp = fopen(filename, "r");
+    FILE *fp = fopen(filename, "r");
     char buf[MAX_CHAR_LEN];
 
     if (fp == NULL) {
@@ -600,10 +584,10 @@ void print_total_info_header_v1(struct npu_total_info *npu_total_info)
     printf("| NPU   Name                | Health        | Power(W)    Temp(C)           Hugepages-Usage(page) |\n");
     if (chip_type == NPU_CHIP_910_93) {
         printf("| Chip  Phy-ID              | Bus-Id        | AICore(%%)   Memory-Usage(MB)  HBM-Usage(MB)   "
-        "      |\n");
+               "      |\n");
     } else {
         printf("| Chip                      | Bus-Id        | AICore(%%)   Memory-Usage(MB)  HBM-Usage(MB)  "
-        "       |\n");
+               "       |\n");
     }
     printf("+===========================+===============+=====================================================+\n");
 }
@@ -639,8 +623,8 @@ void print_total_info_with_HBM(struct npu_total_info *npu_total_info)
         }
     }
     if (!dcmi_check_run_in_docker() && !check_file("/etc/ascend_install.info", "Driver_Install_Status=complete")) {
-        printf("[WARNING]The driver package may not be completely installed, "\
-            "which may cause function abnormal. Please reinstall it.\n");
+        printf("[WARNING]The driver package may not be completely installed, "
+               "which may cause function abnormal. Please reinstall it.\n");
     }
     return;
 }
@@ -657,28 +641,18 @@ void print_mapping_info_910_93(struct npu_mapping_info *npu_mapping_info)
     printf("\t%-30s %-30s %-30s %-30s %-30s\n", "NPU ID", "Chip ID", "Chip Logic ID", "Chip Phy-ID", "Chip Name");
     for (card_index = 0; card_index < npu_mapping_info->card_count; card_index++) {
         for (chip_index = 0; chip_index < npu_mapping_info->card_info[card_index].chip_count; chip_index++) {
-            printf("\t%-30d %-30d %-30d %-30d %s\n",
-                npu_mapping_info->card_info[card_index].card_id,
-                chip_index,
-                npu_mapping_info->card_info[card_index].chip_logic_id[chip_index],
-                npu_mapping_info->card_info[card_index].chip_phy_id[chip_index],
-                npu_mapping_info->card_info[card_index].chip_info[chip_index].chip_name);
+            printf("\t%-30d %-30d %-30d %-30d %s\n", npu_mapping_info->card_info[card_index].card_id, chip_index,
+                   npu_mapping_info->card_info[card_index].chip_logic_id[chip_index],
+                   npu_mapping_info->card_info[card_index].chip_phy_id[chip_index],
+                   npu_mapping_info->card_info[card_index].chip_info[chip_index].chip_name);
         }
         if (npu_mapping_info->card_info[card_index].mcu_id != -1) {
-            printf("\t%-30d %-30d %-30s %-30s %-30s\n",
-                npu_mapping_info->card_info[card_index].card_id,
-                npu_mapping_info->card_info[card_index].mcu_id,
-                "-",
-                "-",
-                "Mcu");
+            printf("\t%-30d %-30d %-30s %-30s %-30s\n", npu_mapping_info->card_info[card_index].card_id,
+                   npu_mapping_info->card_info[card_index].mcu_id, "-", "-", "MCU");
         }
         if (npu_mapping_info->card_info[card_index].cpu_id != -1) {
-            printf("\t%-30d %-30d %-30s %-30s %-30s\n",
-                npu_mapping_info->card_info[card_index].card_id,
-                npu_mapping_info->card_info[card_index].cpu_id,
-                "-",
-                "-",
-                "3559");
+            printf("\t%-30d %-30d %-30s %-30s %-30s\n", npu_mapping_info->card_info[card_index].card_id,
+                   npu_mapping_info->card_info[card_index].cpu_id, "-", "-", "3559");
         }
     }
 
@@ -694,7 +668,7 @@ void print_mapping_info_950(struct npu_mapping_info *npu_mapping_info)
         printf("There is no NPU card on this server.\n");
         return;
     }
-        
+
     for (start = 0; start < npu_mapping_info->card_count; start++) {
         if (g_board_details.card_info[start].slot_id != -1) {
             break;
@@ -707,12 +681,10 @@ void print_mapping_info_950(struct npu_mapping_info *npu_mapping_info)
 
     printf("\t%-30s %-30s %-30s %-30s %-30s\n", "NPU ID", "Slot ID", "Chip ID", "Chip Phy-ID", "Chip Name");
     for (card_index = 0; card_index < npu_mapping_info->card_count; card_index++) {
-        printf("\t%-30d %-30d %-30d %-30d %s\n",
-            npu_mapping_info->card_info[card_index].card_id,
-            g_board_details.card_info[start].slot_id,
-            chip_index,
-            npu_mapping_info->card_info[card_index].chip_phy_id[chip_index],
-            npu_mapping_info->card_info[card_index].chip_info[chip_index].chip_name);
+        printf("\t%-30d %-30d %-30d %-30d %s\n", npu_mapping_info->card_info[card_index].card_id,
+               g_board_details.card_info[start].slot_id, chip_index,
+               npu_mapping_info->card_info[card_index].chip_phy_id[chip_index],
+               npu_mapping_info->card_info[card_index].chip_info[chip_index].chip_name);
         start++;
     }
     return;
@@ -724,7 +696,8 @@ void print_all_info(struct npu_all_info *npu_all_info)
     enum npu_chip_type chip_type = npu_get_chip_type();
 
     bool check_result = ((chip_type == NPU_CHIP_910 || chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_910_93 ||
-                         chip_type == NPU_CHIP_950) && (npu_board_type_is_server()));
+                          chip_type == NPU_CHIP_950) &&
+                         (npu_board_type_is_server()));
 
     if (npu_all_info->card_count < 1) {
         if (npu_board_type_is_station() || npu_board_type_is_hilens()) {
@@ -775,27 +748,21 @@ void print_mapping_info(struct npu_mapping_info *npu_mapping_info)
         for (chip_index = 0; chip_index < npu_mapping_info->card_info[card_index].chip_count; chip_index++) {
             if (npu_get_chip_type() == NPU_CHIP_310) {
                 printf("\t%-30d %-30d %-30d %-30s\n", npu_mapping_info->card_info[card_index].card_id, chip_index,
-                    npu_mapping_info->card_info[card_index].chip_logic_id[chip_index], "MiniD");
+                       npu_mapping_info->card_info[card_index].chip_logic_id[chip_index], "MiniD");
             } else {
                 printf("\t%-30d %-30d %-30d %s %s\n", npu_mapping_info->card_info[card_index].card_id, chip_index,
-                    npu_mapping_info->card_info[card_index].chip_logic_id[chip_index],
-                    npu_mapping_info->card_info[card_index].chip_info[chip_index].chip_type,
-                    npu_mapping_info->card_info[card_index].chip_info[chip_index].chip_name);
+                       npu_mapping_info->card_info[card_index].chip_logic_id[chip_index],
+                       npu_mapping_info->card_info[card_index].chip_info[chip_index].chip_type,
+                       npu_mapping_info->card_info[card_index].chip_info[chip_index].chip_name);
             }
         }
         if (npu_mapping_info->card_info[card_index].mcu_id != -1) {
-            printf("\t%-30d %-30d %-30s %-30s\n",
-                npu_mapping_info->card_info[card_index].card_id,
-                npu_mapping_info->card_info[card_index].mcu_id,
-                "-",
-                "Mcu");
+            printf("\t%-30d %-30d %-30s %-30s\n", npu_mapping_info->card_info[card_index].card_id,
+                   npu_mapping_info->card_info[card_index].mcu_id, "-", "MCU");
         }
         if (npu_mapping_info->card_info[card_index].cpu_id != -1) {
-            printf("\t%-30d %-30d %-30s %-30s\n",
-                npu_mapping_info->card_info[card_index].card_id,
-                npu_mapping_info->card_info[card_index].cpu_id,
-                "-",
-                "3559");
+            printf("\t%-30d %-30d %-30s %-30s\n", npu_mapping_info->card_info[card_index].card_id,
+                   npu_mapping_info->card_info[card_index].cpu_id, "-", "3559");
         }
     }
 
@@ -843,12 +810,12 @@ void print_chip_memory_usages_info(struct npu_chip_usages_info *usages_info)
             printf("\t%-30s : %d\n", "Hugepages Usage Rate(%)", 0);
         } else {
             printf("\t%-30s : %d\n", "Hugepages Usage Rate(%)",
-                (int)((usages_info->memory_size_info_M.hugepages_total -
-                usages_info->memory_size_info_M.hugepages_free) *
-                DIGITAL_NUM_TO_PER / usages_info->memory_size_info_M.hugepages_total));
+                   (int)((usages_info->memory_size_info_M.hugepages_total -
+                          usages_info->memory_size_info_M.hugepages_free) *
+                         DIGITAL_NUM_TO_PER / usages_info->memory_size_info_M.hugepages_total));
         }
     } else if (chip_type == NPU_CHIP_910B || (chip_type == NPU_CHIP_910_93) ||
-                (chip_type == NPU_CHIP_950)) { // 1980B、1980C、1980D无DDR
+               (chip_type == NPU_CHIP_950)) { // 1980B、1980C、1980D无DDR
         printf("\t%-30s : %u\n", "DDR Capacity(MB)", 0);
         if (usages_info->memory_size_info_M.utiliza != NPU_DEFAULT_VALUE) {
             printf("\t%-30s : %u\n", "DDR Usage Rate(%)", 0);
@@ -865,9 +832,9 @@ void print_chip_memory_usages_info(struct npu_chip_usages_info *usages_info)
             printf("\t%-30s : %d\n", "DDR Hugepages Usage Rate(%)", 0);
         } else {
             printf("\t%-30s : %d\n", "DDR Hugepages Usage Rate(%)",
-                (int)((usages_info->memory_size_info_M.hugepages_total -
-                usages_info->memory_size_info_M.hugepages_free) *
-                DIGITAL_NUM_TO_PER / usages_info->memory_size_info_M.hugepages_total));
+                   (int)((usages_info->memory_size_info_M.hugepages_total -
+                          usages_info->memory_size_info_M.hugepages_free) *
+                         DIGITAL_NUM_TO_PER / usages_info->memory_size_info_M.hugepages_total));
         }
     }
 }
@@ -899,8 +866,8 @@ void get_hbm_usage_rate_910b(struct npu_chip_usages_info *usages_info)
 
     if (chip_type == NPU_CHIP_910B) {
         // 虚拟化场景下 获取的hbm usage通过memory usage/ memory size计算
-        usages_info->hbm_usage =
-            usages_info->hbm_size_info_M.memory_usage * PERCENTAGE / usages_info->hbm_size_info_M.memory_size;
+        usages_info->hbm_usage = usages_info->hbm_size_info_M.memory_usage * PERCENTAGE /
+                                 usages_info->hbm_size_info_M.memory_size;
     }
     return;
 }
@@ -909,8 +876,7 @@ STATIC void print_aicube_usages_rate_info(struct npu_chip_usages_info *usages_in
 {
     enum npu_chip_type chip_type = npu_get_chip_type();
     if (((usages_info->aicube_usage & (0x1 << DCMI_VF_FLAG_BIT)) == 0) &&
-        (chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_910_93 ||
-         chip_type == NPU_CHIP_950)) {
+        (chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_910_93 || chip_type == NPU_CHIP_950)) {
         printf("\t%-30s : %u\n", "Aicube Usage Rate(%)", usages_info->aicube_usage);
     }
     return;
@@ -942,8 +908,8 @@ void print_chip_usages_npu_utilization(struct npu_chip_usages_info *usages_info)
 void print_chip_usages_info(struct npu_chip_usages_info *usages_info)
 {
     enum npu_chip_type chip_type = npu_get_chip_type();
-    bool support_chip_type = (chip_type == NPU_CHIP_910 || chip_type == NPU_CHIP_910B ||
-                              chip_type == NPU_CHIP_910_93 || chip_type == NPU_CHIP_950);
+    bool support_chip_type = (chip_type == NPU_CHIP_910 || chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_910_93 ||
+                              chip_type == NPU_CHIP_950);
     print_chip_memory_usages_info(usages_info);
 
     if (support_chip_type) {
@@ -1012,9 +978,8 @@ static void print_die_id_info(struct npu_chip_info *chip_info)
 {
     size_t i, count;
     enum npu_chip_type chip_type = npu_get_chip_type();
-    bool support_chip_type = (chip_type == NPU_CHIP_910 || chip_type == NPU_CHIP_910B ||
-                              chip_type == NPU_CHIP_910_93);
-    
+    bool support_chip_type = (chip_type == NPU_CHIP_910 || chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_910_93);
+
     if (chip_type == NPU_CHIP_950) {
         count = sizeof(chip_info->ddie_id.soc_die) / sizeof(chip_info->ddie_id.soc_die[0]);
         printf("\t%-30s : %d\n", "DDie Count", 1);
@@ -1082,8 +1047,8 @@ static void print_ascend_chip_info(struct npu_chip_info *chip_info, unsigned int
             printf("\t%-30s : %s\n", "PCIe Bus Info", "NA");
         } else {
             printf("\t%-30s : %04X:%02X:%02X.%X\n", "PCIe Bus Info", chip_info->device_pcie_info.domain,
-                chip_info->device_pcie_info.bdf_busid, chip_info->device_pcie_info.bdf_deviceid,
-                chip_info->device_pcie_info.bdf_funcid);
+                   chip_info->device_pcie_info.bdf_busid, chip_info->device_pcie_info.bdf_deviceid,
+                   chip_info->device_pcie_info.bdf_funcid);
         }
         printf("\t%-30s : %s\n", "Firmware Version", chip_info->xloader_version);
     }
@@ -1094,7 +1059,7 @@ static void print_mcu_firmware_version_info(struct npu_chip_info *chip_info)
     if (dcmi_check_vnpu_in_docker_or_virtual(chip_info->npu_id) == TRUE) {
         // 910B算力切分容器场景查不到固件版本信息,修改回显为NA
         printf("\t%-30s : %s\n", "Firmware Version",
-            strcmp(chip_info->xloader_version, "0") == 0 ? "NA" : chip_info->xloader_version);
+               strcmp(chip_info->xloader_version, "0") == 0 ? "NA" : chip_info->xloader_version);
     } else {
         printf("\t%-30s : %s\n", "Firmware Version", chip_info->xloader_version);
     }
@@ -1226,13 +1191,13 @@ void print_memory_info(int card_id, int device_id, struct npu_memory_info *memor
         return;
     }
 
-    if (!((chip_type == NPU_CHIP_910) || (chip_type == NPU_CHIP_910B) ||
-        (chip_type == NPU_CHIP_910_93) ||(chip_type == NPU_CHIP_950))) {
-            ret = dsmi_get_device_info(device_logic_id, DSMI_MAIN_CMD_MEMORY, DSMI_SUB_CMD_MEMORY_CAPACITY,
-                (void*)&ddr_info, &ddr_size);
-            if (ret != DCMI_OK) {
-                gplog(LOG_ERR, "call dsmi_get_device_info failed, type=%d. err is %d.", npu_get_chip_type(), ret);
-            }
+    if (!((chip_type == NPU_CHIP_910) || (chip_type == NPU_CHIP_910B) || (chip_type == NPU_CHIP_910_93) ||
+          (chip_type == NPU_CHIP_950))) {
+        ret = dsmi_get_device_info(device_logic_id, DSMI_MAIN_CMD_MEMORY, DSMI_SUB_CMD_MEMORY_CAPACITY,
+                                   (void *)&ddr_info, &ddr_size);
+        if (ret != DCMI_OK) {
+            gplog(LOG_ERR, "call dsmi_get_device_info failed, type=%d. err is %d.", npu_get_chip_type(), ret);
+        }
     }
 
     print_ddr_info(ddr_info, memory_info);
@@ -1244,7 +1209,7 @@ void print_memory_info(int card_id, int device_id, struct npu_memory_info *memor
 STATIC void print_chip_compatibility_info(struct npu_device_info *device_info)
 {
     int ret;
-    char* compt_list[] = {"", "OK", "NOK", "UNKNOWN", NULL};
+    char *compt_list[] = {"", "OK", "NOK", "UNKNOWN", NULL};
 
     /* 仅支持EP设备，RC设备、310不支持(直接不打印) */
     if ((npu_board_type_is_soc() == TRUE) || (dcmi_board_chip_type_is_ascend_310() == TRUE)) {
@@ -1256,8 +1221,7 @@ STATIC void print_chip_compatibility_info(struct npu_device_info *device_info)
     ret = root_user_check();
 #endif
     /* 仅支持root用户 */
-    if ((ret != NPU_OK) ||
-        (device_info->compat_info.err == DCMI_ERR_CODE_NOT_SUPPORT) ||
+    if ((ret != NPU_OK) || (device_info->compat_info.err == DCMI_ERR_CODE_NOT_SUPPORT) ||
         (device_info->compat_info.err == DCMI_ERR_CODE_OPER_NOT_PERMITTED)) {
         printf("\t%-30s : %s\n", "Compatibility", "NOT SUPPORT");
     } else if (device_info->compat_info.compatibility == 0) {
@@ -1278,7 +1242,7 @@ STATIC void print_card_board_info(struct npu_device_info *device_info)
 
     if (chip_type == NPU_CHIP_950 && card_950_type_judge(device_info->main_board_id)) {
         printf("\t%-30s : 0x%02x(%dP)\n", "Main Board ID", device_info->main_board_id,
-            card_950_type_judge(device_info->main_board_id));
+               card_950_type_judge(device_info->main_board_id));
     } else if (chip_type == NPU_CHIP_910_93 || chip_type == NPU_CHIP_950) {
         printf("\t%-30s : 0x%02x\n", "Main Board ID", device_info->main_board_id);
     }
@@ -1309,8 +1273,8 @@ STATIC void print_card_ub_info(struct npu_device_info *device_info)
 STATIC void print_card_pcie_info(struct npu_device_info *device_info)
 {
     printf("\t%-30s : %04X:%02X:%02X.%X\n", "PCIe Bus Info", device_info->device_pcie_info.domain,
-        device_info->device_pcie_info.bdf_busid, device_info->device_pcie_info.bdf_deviceid,
-        device_info->device_pcie_info.bdf_funcid);
+           device_info->device_pcie_info.bdf_busid, device_info->device_pcie_info.bdf_deviceid,
+           device_info->device_pcie_info.bdf_funcid);
     printf("\t%-30s : %d\n", "Slot ID", device_info->slot_id);
     printf("\t%-30s : %s\n", "Class ID", "NA");
     printf("\t%-30s : 0x%04X\n", "PCI Vendor ID", device_info->device_pcie_info.venderid);
@@ -1324,8 +1288,7 @@ void print_ascend_board_info(struct npu_device_info *device_info)
     enum npu_chip_type chip_type = npu_get_chip_type();
 
     printf("\t%-30s : %d\n", "NPU ID", device_info->npu_id);
-    if (chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_910_93 ||
-        chip_type == NPU_CHIP_950) {
+    if (chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_910_93 || chip_type == NPU_CHIP_950) {
         printf("\t%-30s : %s\n", "Product Name", device_info->product_name);
         printf("\t%-30s : %s\n", "Model", device_info->model);
         printf("\t%-30s : %s\n", "Manufacturer", device_info->manufacturer);
@@ -1350,12 +1313,12 @@ void print_ascend_board_info(struct npu_device_info *device_info)
 void printf_npu_card_pcie_info(struct npu_device_info *device_info)
 {
     enum npu_chip_type chip_type = npu_get_chip_type();
-    bool support_chip_type = (chip_type == NPU_CHIP_310P || chip_type == NPU_CHIP_910 ||
-        chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_950);
+    bool support_chip_type = (chip_type == NPU_CHIP_310P || chip_type == NPU_CHIP_910 || chip_type == NPU_CHIP_910B ||
+                              chip_type == NPU_CHIP_950);
     if (support_chip_type) {
         printf("\t%-30s : %04X:%02X:%02X.%X\n", "PCIe Bus Info", device_info->device_pcie_info.domain,
-            device_info->device_pcie_info.bdf_busid, device_info->device_pcie_info.bdf_deviceid,
-            device_info->device_pcie_info.bdf_funcid);
+               device_info->device_pcie_info.bdf_busid, device_info->device_pcie_info.bdf_deviceid,
+               device_info->device_pcie_info.bdf_funcid);
     } else {
         printf("\t%-30s : %s\n", "PCIe Bus Info", device_info->pcie_info);
     }
@@ -1398,7 +1361,7 @@ void print_npu_card_info(struct npu_device_info *device_info)
 
     if (npu_get_chip_type() == NPU_CHIP_950 && card_950_type_judge(device_info->main_board_id)) {
         printf("\t%-30s : 0x%02x(%dP)\n", "Main Board ID", device_info->main_board_id,
-            card_950_type_judge(device_info->main_board_id));
+               card_950_type_judge(device_info->main_board_id));
     }
 
     if (npu_board_type_is_model()) {
@@ -1503,24 +1466,22 @@ static void print_mcu_common_info(struct npu_card_common_info *card_common_info)
     if (card_common_info->mcu_id != NPU_DEFAULT_VALUE) {
         printf("\n");
         printf("\t%-30s : %s\n", "Chip Name",
-            ((npu_get_chip_type() == NPU_CHIP_310) || (npu_get_chip_type() == NPU_CHIP_310B)) ? "MCU" : "mcu");
+               ((npu_get_chip_type() == NPU_CHIP_310) || (npu_get_chip_type() == NPU_CHIP_310B)) ? "MCU" : "mcu");
         if (dcmi_check_vnpu_in_docker_or_virtual(card_common_info->card_id) == TRUE &&
             card_common_info->chip_common_info[card_common_info->mcu_id].temp == 0) {
             // 910B算力切分下的容器和虚拟机场景，获取不到mcu信息，回显NA
             printf("\t%-30s : %s\n", "Temperature(C)", "NA");
         } else {
             printf("\t%-30s : %d\n", "Temperature(C)",
-                card_common_info->chip_common_info[card_common_info->mcu_id].temp);
+                   card_common_info->chip_common_info[card_common_info->mcu_id].temp);
         }
 
         if ((npu_get_chip_type() == NPU_CHIP_310) || (npu_get_chip_type() == NPU_CHIP_310B)) {
-            printf("\t%-30s : %.1f\n",
-                "Power Dissipation(W)",
-                card_common_info->chip_common_info[card_common_info->mcu_id].power * NPU_DECIMAL_TRANS);
+            printf("\t%-30s : %.1f\n", "Power Dissipation(W)",
+                   card_common_info->chip_common_info[card_common_info->mcu_id].power * NPU_DECIMAL_TRANS);
         } else if (npu_get_chip_type() == NPU_CHIP_310P) {
-            printf("\t%-30s : %.1f\n",
-                "NPU Real-time Power(W)",
-                card_common_info->chip_common_info[card_common_info->mcu_id].power * NPU_DECIMAL_TRANS);
+            printf("\t%-30s : %.1f\n", "NPU Real-time Power(W)",
+                   card_common_info->chip_common_info[card_common_info->mcu_id].power * NPU_DECIMAL_TRANS);
         }
     }
 }
@@ -1531,17 +1492,16 @@ static void print_cpu_common_info(struct npu_card_common_info *card_common_info)
         printf("\n");
         printf("\t%-30s : %s\n", "Chip Name", "3559");
         printf("\t%-30s : %d\n", "Temperature(C)", card_common_info->chip_common_info[card_common_info->cpu_id].temp);
-        printf("\t%-30s : %.1f\n",
-            "Power Dissipation(W)",
-            card_common_info->chip_common_info[card_common_info->cpu_id].power * NPU_DECIMAL_TRANS);
+        printf("\t%-30s : %.1f\n", "Power Dissipation(W)",
+               card_common_info->chip_common_info[card_common_info->cpu_id].power * NPU_DECIMAL_TRANS);
     }
 }
 
 int get_aicore_freq_support_type()
 {
     enum npu_chip_type chip_type = npu_get_chip_type();
-    return chip_type == NPU_CHIP_910 || chip_type == NPU_CHIP_910B ||
-        chip_type == NPU_CHIP_310P || chip_type == NPU_CHIP_910_93 || chip_type == NPU_CHIP_950;
+    return chip_type == NPU_CHIP_910 || chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_310P ||
+           chip_type == NPU_CHIP_910_93 || chip_type == NPU_CHIP_950;
 }
 
 int get_rated_power_dissipation_supppry_type()
@@ -1563,8 +1523,8 @@ void print_npu_common_info(struct npu_card_common_info *card_common_info)
 {
     int i;
     enum npu_chip_type chip_type = npu_get_chip_type();
-    bool support_chip_type = (chip_type == NPU_CHIP_910 || chip_type == NPU_CHIP_910B ||
-                             chip_type == NPU_CHIP_910_93 || chip_type == NPU_CHIP_950);
+    bool support_chip_type = (chip_type == NPU_CHIP_910 || chip_type == NPU_CHIP_910B || chip_type == NPU_CHIP_910_93 ||
+                              chip_type == NPU_CHIP_950);
 
     for (i = 0; i < card_common_info->chip_count; i++) {
         if (npu_check_is_has_d_chip() == FALSE) {
@@ -1586,9 +1546,9 @@ void print_npu_common_info(struct npu_card_common_info *card_common_info)
             printf("\t%-30s : %u\n", "Aicore Usage Rate(%)", (card_common_info->chip_common_info[i].npu_usage));
         }
         if (get_aicore_freq_support_type()) {
-            printf("\t%-30s : %u\n", "Aicore Freq(MHZ)", (card_common_info->chip_common_info[i].aicore_info.freq));
-            printf("\t%-30s : %u\n", "Aicore curFreq(MHZ)",
-                (card_common_info->chip_common_info[i].aicore_info.cur_freq));
+            printf("\t%-30s : %u\n", "Aicore Freq(MHz)", (card_common_info->chip_common_info[i].aicore_info.freq));
+            printf("\t%-30s : %u\n", "Aicore curFreq(MHz)",
+                   (card_common_info->chip_common_info[i].aicore_info.cur_freq));
         }
 
         if (support_chip_type) {
@@ -1598,10 +1558,10 @@ void print_npu_common_info(struct npu_card_common_info *card_common_info)
         printf("\t%-30s : %d\n", "Temperature(C)", card_common_info->chip_common_info[i].temp);
         if (get_rated_power_dissipation_supppry_type()) {
             printf("\t%-30s : %.1f\n", "Rated Power Dissipation(W)",
-                card_common_info->chip_common_info[i].power * NPU_DECIMAL_TRANS);
+                   card_common_info->chip_common_info[i].power * NPU_DECIMAL_TRANS);
         } else if (support_chip_type) {
             printf("\t%-30s : %.1f\n", "NPU Real-time Power(W)",
-                card_common_info->chip_common_info[i].power * NPU_DECIMAL_TRANS);
+                   card_common_info->chip_common_info[i].power * NPU_DECIMAL_TRANS);
         }
     }
 }
@@ -1661,8 +1621,7 @@ void print_chip_temperature_for_outband(int card_id, const char *data_info, int 
             printf(" %s\n", "Failed");
         } else if (temp_get == TEMP_VALUE_ERROR) {
             printf(" %s\n", "NA");
-        } else if (temp_get == 0 && chip_is_910b_93 &&
-            dcmi_check_vnpu_in_docker_or_virtual(card_id)) {
+        } else if (temp_get == 0 && chip_is_910b_93 && dcmi_check_vnpu_in_docker_or_virtual(card_id)) {
             printf(" %s\n", "NA");
         } else {
             printf(" %d\n", temp_get);
@@ -1703,8 +1662,8 @@ void printf_hbm_ecc_info(struct dcmi_ecc_info *hbm_ecc_info)
     printf("\t%-40s : %u\n", "HBM Double Bit Isolated Pages Count", hbm_ecc_info->double_bit_isolated_pages_cnt);
 }
 
-static int dcmi_get_single_error_info(struct npu_smi_operate_info *operate_info,
-                                      unsigned int error_code, char *error_info)
+static int dcmi_get_single_error_info(struct npu_smi_operate_info *operate_info, unsigned int error_code,
+                                      char *error_info)
 {
     int ret;
     ret = memset_s(error_info, NPU_ERROR_STRING_MAX_LENGTH, 0, NPU_ERROR_STRING_MAX_LENGTH);
@@ -1715,14 +1674,13 @@ static int dcmi_get_single_error_info(struct npu_smi_operate_info *operate_info,
     ret = dcmi_get_device_errorcode_string(operate_info->id, operate_info->chip_id, error_code,
                                            (unsigned char *)error_info, NPU_ERROR_STRING_MAX_LENGTH);
 #else
-    ret = dcmiv2_get_device_error_info(operate_info->id, error_code,
-                                       (unsigned char *)error_info, NPU_ERROR_STRING_MAX_LENGTH);
+    ret = dcmiv2_get_device_error_info(operate_info->id, error_code, (unsigned char *)error_info,
+                                       NPU_ERROR_STRING_MAX_LENGTH);
 #endif
     return ret;
 }
 
-static bool print_health_status(struct npu_smi_operate_info *operate_info,
-                                struct npu_device_health_info *health_info)
+static bool print_health_status(struct npu_smi_operate_info *operate_info, struct npu_device_health_info *health_info)
 {
     int ret;
     enum dcmi_unit_type device_type = INVALID_TYPE;
@@ -1784,23 +1742,23 @@ void print_diagnosis_info(struct npu_smi_operate_info *operate_info, struct npu_
             printf("Failed to get error information for error code : 0x%04x\n", error_code);
             continue;
         }
- 
+
         if (i == 0) {
             printf(" %s\n", error_info);
         } else {
             printf("\n\t%-30s : %s\n", " ", error_info);
         }
     }
- 
+
     return;
 }
 
 void print_pcie_err_code(struct dcmi_chip_pcie_err_rate *pcie_err_code_info)
 {
-        printf("\t%-30s : %u\n", "Pcs Rx Error Count", pcie_err_code_info->pcs_rx_err_cnt);
-        printf("\t%-30s : %u\n", "Phy Lane Error Count", pcie_err_code_info->phy_lane_err_counter);
-        printf("\t%-30s : %u\n", "Dl Lcrc Error Count", pcie_err_code_info->dl_lcrc_err_num);
-        printf("\t%-30s : %u\n", "Dl Dcrc Error Count", pcie_err_code_info->dl_dcrc_err_num);
+    printf("\t%-30s : %u\n", "Pcs Rx Error Count", pcie_err_code_info->pcs_rx_err_cnt);
+    printf("\t%-30s : %u\n", "Phy Lane Error Count", pcie_err_code_info->phy_lane_err_counter);
+    printf("\t%-30s : %u\n", "Dl Lcrc Error Count", pcie_err_code_info->dl_lcrc_err_num);
+    printf("\t%-30s : %u\n", "Dl Dcrc Error Count", pcie_err_code_info->dl_dcrc_err_num);
 }
 
 void print_pcie_err_count(struct dcmi_pcie_link_error_info *pcie_err_count)
@@ -1835,12 +1793,11 @@ void printf_template_info(struct dcmi_computing_template *template_in, unsigned 
     printf("|                               GB                 PNGD           VDEC           JPEGE     |\n");
     printf("|==========================================================================================|\n");
     for (index = 0; index < template_num; index++) {
-        printf("|%-19s %-9u %-9u %-9g %-14d %-14d %-10d|\n",
-            template_in[index].name, template_in[index].aicore_num, (template_in[index].mem_size >> mb_to_gb_shift_num),
-            template_in[index].aicpu_num, (int)template_in[index].vpc, (int)template_in[index].venc,
-            (int)template_in[index].jpegd);
+        printf("|%-19s %-9u %-9u %-9g %-14d %-14d %-10d|\n", template_in[index].name, template_in[index].aicore_num,
+               (template_in[index].mem_size >> mb_to_gb_shift_num), template_in[index].aicpu_num,
+               (int)template_in[index].vpc, (int)template_in[index].venc, (int)template_in[index].jpegd);
         printf("|%-49s %-14g %-14d %-10d|\n", " ", template_in[index].pngd, (int)template_in[index].vdec,
-            (int)template_in[index].jpege);
+               (int)template_in[index].jpege);
         printf("+------------------------------------------------------------------------------------------+\n");
     }
 }

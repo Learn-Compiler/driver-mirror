@@ -642,7 +642,7 @@ get_A2A3_network_info() {
 
         #查询serdes的信号质量，重定向输出到extra_network.log
         echo -e "\n-----------serdes quaility---------------" >> extra_network.log
-        echo "====> $i" >> extra_network.log; ascend-dmi --sq -t roce -d $i &>> extra_network.log; 
+        echo "====> $i" >> extra_network.log; command -v ascend-dmi >/dev/null 2>&1 && timeout 10s ascend-dmi --sq -t roce -d $i &>> extra_network.log;
 
         echo -e "\n-----------TC buffer and PFC threshold---------------" >> extra_network.log
         echo "====> $i" >> extra_network.log;timeout 10s hccn_tool -i $i -tc_cfg -g &>> extra_network.log; 
