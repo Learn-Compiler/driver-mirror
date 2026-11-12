@@ -864,7 +864,7 @@ Query NIC-supported RoCE feature capabilities.
 
 **Parameters**
 
-- context：context: Extended context, must be created via ibv\_open\_extend, non-null.
+- context: context: Extended context, must be created via ibv\_open\_extend, non-null.
 - qp: Verbs QP structure.
 - sl: Service Level.
 - tc: Traffic Class.
