@@ -70,6 +70,7 @@ Execute the following command to download the Driver repository source code:
 
 ```
 git clone https://gitcode.com/cann/driver.git
+cd driver
 ```
 
 ## Source Code Compilation and Deployment
@@ -120,7 +121,7 @@ b. ascend950 supports compilation in the ARM environment of the Lingqu Computing
 Execute the following command to install the Driver package:
 
 ```
-./Ascend-hdk-<chip_type>-driver-<version>_<os_version>-<arch>.run --full
+./build_out/Ascend-hdk-<chip_type>-driver-<version>_<os_version>-<arch>.run --full
 ```
 
 `<chip_type>` indicates the chip type, currently including `910b`, `A3`, and `950`. `<version>` indicates the software package version number, for example 8.5.0. `<os_version>` indicates the operating system distribution version, for example Ubuntu20.04, openEuler22.03. `<arch>` indicates the chip architecture, with values including x86_64 and aarch64.

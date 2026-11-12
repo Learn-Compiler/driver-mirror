@@ -70,6 +70,7 @@ apt install -y tar net-tools linux-headers-$(uname -r) gcc g++ cmake make libffi
 
 ```
 git clone https://gitcode.com/cann/driver.git
+cd driver
 ```
 
 ## 源码编译及部署
@@ -120,7 +121,7 @@ b. ascend950支持在灵衢计算系统超节点架构的ARM环境编译；进�
 执行如下命令，安装Driver包：
 
 ```
-./Ascend-hdk-<chip_type>-driver-<version>_<os_version>-<arch>.run --full
+./build_out/Ascend-hdk-<chip_type>-driver-<version>_<os_version>-<arch>.run --full
 ```
 
 `<chip_type>`表示芯片类型，当前主要包括`910b`、`A3`和`950`；`<version>`表示软件包版本号，例如8.5.0；`<os_version>`表示操作系统发行版本，例如Ubuntu20.04、openEuler22.03；`<arch>`表示芯片架构，取值包括x86_64与aarch64。
