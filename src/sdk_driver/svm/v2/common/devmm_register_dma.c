@@ -21,6 +21,72 @@
 #include "devmm_register_dma.h"
 #include "svm_ioctl.h"
 
+static void devmm_register_dma_node_init_index(struct devmm_register_dma_node *node)
+{
+    u64 count, i, byte_offset = 0;
+
+    node->blk_index = NULL;
+    if (node->num <= DEVMM_DMA_INDEX_STRIDE) {
+        return;
+    }
+    count = (node->num - 1) / DEVMM_DMA_INDEX_STRIDE + 1;
+    node->blk_index = devmm_kvzalloc(count * sizeof(u64));
+    if (node->blk_index == NULL) {
+        /* Indexing is optional; registration/copy semantics must not change. */
+        return;
+    }
+    for (i = 0; i < node->num; i++) {
+        if (i % DEVMM_DMA_INDEX_STRIDE == 0) {
+            node->blk_index[i / DEVMM_DMA_INDEX_STRIDE] = byte_offset;
+        }
+        byte_offset += node->blks[i].sz;
+    }
+}
+
+static void devmm_register_dma_node_uninit_index(struct devmm_register_dma_node *node)
+{
+    if (node->blk_index != NULL) {
+        devmm_kvfree(node->blk_index);
+        node->blk_index = NULL;
+    }
+}
+
+u64 devmm_register_dma_node_find_block(const struct devmm_register_dma_node *node, u64 align_va, u64 *blk_va)
+{
+    u64 offset = 0;
+    u64 lo = 0;
+    u64 hi, mid;
+    u64 relative_va = align_va - node->align_va;
+
+    *blk_va = node->align_va;
+    if (node->blk_index != NULL) {
+        hi = (node->num - 1) / DEVMM_DMA_INDEX_STRIDE + 1;
+        /* Upper bound: an address on a boundary belongs to the next block.
+         * The caller already holds a reference and checked the source range.
+         * No shared cursor or per-copy allocation: concurrent lookups are read-only.
+         */
+        while (lo + 1 < hi) {
+            /* Halve the search interval to select its midpoint without adding lo and hi. */
+            mid = lo + (hi - lo) / 2;
+            if (node->blk_index[mid] <= relative_va) {
+                lo = mid;
+            } else {
+                hi = mid;
+            }
+        }
+        offset = lo * DEVMM_DMA_INDEX_STRIDE;
+        *blk_va += node->blk_index[lo];
+    }
+    /* At most 64 blocks with an index; retain the original fallback otherwise. */
+    for (; offset < node->num; offset++) {
+        if (*blk_va + node->blks[offset].sz > align_va) {
+            break;
+        }
+        *blk_va += node->blks[offset].sz;
+    }
+    return offset;
+}
+
 static void devmm_register_dma_rb_range_handle(ka_rb_node_t *rbnode, struct rb_range_handle *range_handle)
 {
     struct devmm_register_dma_node *node = ka_base_rb_entry(rbnode, struct devmm_register_dma_node, rbnode);
@@ -58,6 +124,7 @@ static void devmm_destory_registered_dma_node_res(struct devmm_register_dma_node
     side.num = node->num;
     devmm_pa_node_list_dma_unmap(node->devid, &side);
     devmm_clear_host_pa_node_list(pin_flg, &side);
+    devmm_register_dma_node_uninit_index(node);
     devmm_kvfree(node->blks);
 }
 
@@ -256,6 +323,8 @@ static int devmm_set_register_dma_node(struct devmm_svm_process *svm_proc, u64 v
         return ret;
     }
 
+    /* Build only after merging/mapping, before insertion into the shared tree. */
+    devmm_register_dma_node_init_index(node);
     return 0;
 }
 

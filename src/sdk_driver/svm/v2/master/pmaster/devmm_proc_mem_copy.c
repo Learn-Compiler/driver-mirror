@@ -1984,12 +1984,7 @@ static void devmm_make_single_dma_blk_list_by_cache(struct devmm_copy_side *side
     side->blk_page_size = KA_MM_PAGE_SIZE;
     side->register_dma_node = node; /* use for clear dma blk */
 
-    for (offset = 0; offset < node->num; ++offset) {
-        if ((blk_va + node->blks[offset].sz) > align_va) {
-            break;
-        }
-        blk_va += node->blks[offset].sz;
-    }
+    offset = devmm_register_dma_node_find_block(node, align_va, &blk_va);
 
     offset_size = align_va - blk_va;
     side->blks[0].dma = node->blks[offset].dma + offset_size;

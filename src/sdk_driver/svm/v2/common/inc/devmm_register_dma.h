@@ -18,6 +18,9 @@
 #include "svm_proc_mng.h"
 #include "svm_master_proc_mng.h"
 
+/* One entry per 64 merged DMA blocks: at most 1 MiB per 32 GiB at 4 KiB pages. */
+#define DEVMM_DMA_INDEX_STRIDE 64U
+
 struct devmm_register_dma_node {
     ka_rb_node_t rbnode;
     ka_kref_t ref;
@@ -31,6 +34,10 @@ struct devmm_register_dma_node {
     struct devmm_dma_block *blks;
     u64 blks_num;
     u64 num; /* actual num after merge pa */
+    /* Immutable byte offsets from align_va, published with the refcounted node.
+     * NULL keeps the original linear lookup if this optional allocation fails.
+     */
+    u64 *blk_index;
 };
 
 int devmm_ioctl_register_dma(struct devmm_svm_process *svm_proc, struct devmm_ioctl_arg *arg);
@@ -39,5 +46,6 @@ void devmm_destory_register_dma_mng(struct devmm_svm_process *svm_proc);
 void devmm_destory_register_dma_mng_by_devid(struct devmm_svm_process *svm_proc, u32 devid);
 struct devmm_register_dma_node *devmm_register_dma_node_get(struct devmm_register_dma_mng *mng, u64 addr, u64 size);
 void devmm_register_dma_node_put(struct devmm_register_dma_node *node);
+u64 devmm_register_dma_node_find_block(const struct devmm_register_dma_node *node, u64 align_va, u64 *blk_va);
 
 #endif /* __DEVMM_REGISTER_DMA_H__ */
